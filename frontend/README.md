@@ -1,26 +1,27 @@
-# 🚀 Forma AI - AI-Augmented Dynamic Form Engine
+# 🚀 Forma AI – AI-Augmented Dynamic Form Engine
 
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat&logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat&logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2563EB,100:06B6D4&height=200&section=header&text=Forma%20AI&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Dynamic%20Form%20Engine&descAlignY=58&descAlign=50" width="100%">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2563EB,100:3B82F6&height=200&section=header&text=Forma%20AI&fontSize=60&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=AI-Powered%20Dynamic%20Form%20Engine&descAlignY=58&descAlign=50" width="100%">
 </p>
 
 ## 📋 Table of Contents
-- [✨ Overview](#-overview)
-- [🎯 Key Features](#-key-features)
-- [🛠️ Technology Stack](#️-technology-stack)
-- [📂 Project Structure](#-project-structure)
-- [🚀 Quick Start](#-quick-start)
-- [📱 Pages & Features](#-pages--features)
-- [🎨 Design System](#-design-system)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [🙏 Acknowledgments](#-acknowledgments)
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Pages & Features](#-pages--features)
+- [Design System](#-design-system)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgments](#-acknowledgments)
 
 ---
 
@@ -89,26 +90,20 @@
 ### Frontend
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **React** | 18.2.0 | UI Framework |
-| **React Router DOM** | 6.20.1 | Navigation & Routing |
-| **Axios** | 1.6.2 | HTTP Client |
-| **Framer Motion** | 10.16.16 | Animations |
-| **React Icons** | 4.12.0 | Icon Library |
-| **React Hook Form** | 7.48.2 | Form Handling |
-| **React Toastify** | 9.1.3 | Notifications |
+| **React** | 19.2.7 | UI Framework |
+| **React Router DOM** | 7.18.1 | Navigation & Routing |
+| **Axios** | 1.18.1 | HTTP Client |
+| **Framer Motion** | 12.42.2 | Animations |
+| **React Icons** | 5.7.0 | Icon Library |
+| **React Hook Form** | 7.82.0 | Form Handling |
+| **React Toastify** | 11.1.0 | Notifications |
 
 ### Styling & Build
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Tailwind CSS** | 3.3.6 | Utility-first CSS |
-| **Vite** | 5.0.8 | Build Tool |
-| **PostCSS** | 8.4.32 | CSS Processing |
-| **Autoprefixer** | 10.4.16 | CSS Vendor Prefixes |
-
-### Development Tools
-- **ESLint** - Code Quality
-- **Prettier** - Code Formatting
-- **Git** - Version Control
+| **Tailwind CSS** | 4.3.3 | Utility-first CSS |
+| **Vite** | 8.1.1 | Build Tool |
+| **Oxlint** | 1.71.0 | Fast Linter |
 
 ---
 
