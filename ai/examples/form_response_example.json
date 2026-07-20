@@ -1,0 +1,35 @@
+{
+  "title": "Employee Registration Form",
+  "description": "Form for onboarding new employees",
+  "fields": [
+    {
+      "label": "Full Name",
+      "type": "text",
+      "required": true,
+      "placeholder": "Enter full name"
+    },
+    {
+      "label": "Email",
+      "type": "email",
+      "required": true,
+      "placeholder": "Enter email address"
+    },
+    {
+      "label": "Phone Number",
+      "type": "tel",
+      "required": true,
+      "placeholder": "Enter phone number"
+    },
+    {
+      "label": "Department",
+      "type": "select",
+      "options": [
+        "HR",
+        "Engineering",
+        "Finance",
+        "Marketing"
+      ],
+      "required": true
+    }
+  ]
+}
