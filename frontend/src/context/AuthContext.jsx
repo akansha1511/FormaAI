@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Simulate API call - Replace with actual API
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Mock user data
       const userData = {
         id: '1',
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
         role: 'user',
         avatar: 'JD'
       };
-      
+
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       return { success: true, user: userData };
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Simulate API call - Replace with actual API
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Mock user data
       const userData = {
         id: '1',
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
         role: 'user',
         avatar: name.charAt(0).toUpperCase()
       };
-      
+
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       return { success: true, user: userData };

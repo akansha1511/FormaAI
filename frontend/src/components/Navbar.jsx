@@ -51,8 +51,8 @@ const Navbar = () => {
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-                ? 'bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-100/50'
-                : 'bg-white/80 backdrop-blur-lg border-b border-gray-100/50'
+            ? 'bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-100/50'
+            : 'bg-white/80 backdrop-blur-lg border-b border-gray-100/50'
             }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
@@ -71,8 +71,8 @@ const Navbar = () => {
                                             key={link.path}
                                             to={link.path}
                                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${location.pathname === link.path
-                                                    ? 'bg-blue-600/10 text-blue-600'
-                                                    : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                                                ? 'bg-blue-600/10 text-blue-600'
+                                                : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                                                 }`}
                                         >
                                             <span className="flex items-center space-x-2">
@@ -188,8 +188,8 @@ const Navbar = () => {
                                             key={link.path}
                                             to={link.path}
                                             className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${location.pathname === link.path
-                                                    ? 'bg-blue-600/10 text-blue-600'
-                                                    : 'text-gray-700 hover:bg-gray-50'
+                                                ? 'bg-blue-600/10 text-blue-600'
+                                                : 'text-gray-700 hover:bg-gray-50'
                                                 }`}
                                             onClick={() => setIsMenuOpen(false)}
                                         >
