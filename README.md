@@ -1,83 +1,132 @@
 # FormaAI
+<p align="center">
 
-## AI-Augmented Dynamic Form Engine
+![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-Backend-black?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-AI-412991?style=for-the-badge&logo=openai&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-### 📌 Project Description
-FormaAI is an AI-powered web application that converts a user's plain English incident description into a structured dynamic form. The system automatically extracts key information, fills the required fields, allows users to review the generated form, save drafts, and submit it securely.
+</p>
 
----
 
-## 🎯 Objectives
-- Reduce manual form filling.
-- Improve speed and accuracy using AI.
-- Automatically generate dynamic forms.
-- Store and manage submitted data securely.
+<p align="center">
+<b>AI-Augmented Dynamic Form Engine</b>
 
----
+Convert plain English descriptions into intelligent, structured forms using Artificial Intelligence.
 
-## ✨ Features
-- AI-powered text analysis
-- Automatic form generation
-- User authentication
-- Save drafts
-- Dynamic form fields
-- Database storage
-- Responsive web interface
+</p>
 
 ---
 
-## 🛠️ Tech Stack
-- React.js
-- Node.js
-- Express.js
-- MongoDB
-- OpenAI API
-- Tailwind CSS
-- Git & GitHub
+## ✨ Overview
+
+FormaAI is an AI-powered web application that automatically generates structured forms from user descriptions. It extracts key information using AI, creates dynamic fields, validates inputs, and securely stores submissions.
 
 ---
 
-## 👥 Team Members
+## 🎯 Key Features
 
-| Member | Role |
-|---------|------|
-| Member 1 | Frontend/UI Development |
-| Member 2 | Dynamic Form Development |
-| Member 3 | Backend & Authentication |
-| Member 4 | Database |
-| Member 5 | AI Integration |
-| Member 6 | Testing, DevOps & Documentation |
+- 🤖 AI-Powered Form Generation
+- 📝 Dynamic Form Rendering
+- 🔐 User Authentication
+- 💾 Draft Saving
+- 📊 Dashboard
+- 📄 Resume Parsing
+- 📱 Responsive UI
+- ⚡ Fast Performance
 
 ---
 
-## 📁 Project Structure
+## 🛠 Tech Stack
 
+| Category | Technology |
+|-----------|------------|
+| Frontend | React, Vite, Tailwind CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas |
+| AI | OpenAI API |
+| Tools | Git, GitHub, Postman |
 
+---
+
+## 📂 Project Structure
+
+```text
 FormaAI/
-│── frontend/
-│── backend/
-│── database/
-│── ai/
-│── docs/
+│
+├── frontend/
+├── backend/
+├── database/
+├── ai/
+├── docs/
 └── README.md
-
+```
 
 ---
 
 ## 🚀 Installation
 
-1. Clone the repository.
-2. Install dependencies.
-3. Start the frontend and backend.
-4. Connect MongoDB.
-5. Run the application.
+```bash
+git clone <repository-url>
+
+cd FormaAI
+
+npm install
+
+npm run dev
+```
 
 ---
 
-## 📌 Repository
-Private GitHub Repository
+## 👨‍💻 Team Members
+
+| Member | Role |
+|---------|------|
+| Prajjwal | Frontend/UI |
+| Ritika | Dynamic Forms |
+| Gourav | Backend |
+| Shruti | Database |
+| Bhavana | AI |
+| Akansha | Testing, DevOps & Documentation |
 
 ---
 
-## 📄 License
-This project is developed for academic purposes.
+## 🌟 Future Enhancements
+
+- 🌙 Dark Mode
+- 🌐 Multi-language Support
+- 🎙 Voice Input
+- 📈 Analytics Dashboard
+- 📤 PDF Export
+- 📧 Email Notifications
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+2. Create a new branch
+3. Commit your changes
+4. Push your branch
+5. Create a Pull Request
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+<p align="center">
+
+⭐ Star this repository if you found it useful!
+
+Made with ❤️ by Team FormaAI
+
+</p>
