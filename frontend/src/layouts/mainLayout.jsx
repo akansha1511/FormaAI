@@ -6,7 +6,7 @@ import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader';
 
-const MainLayout = () => {
+const mainLayout = () => {
     const { loading } = useAuth();
     const location = useLocation();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -127,4 +127,4 @@ const MainLayout = () => {
     );
 };
 
-export default MainLayout;
+export default mainLayout;
