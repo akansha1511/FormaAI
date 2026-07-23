@@ -1,4 +1,3 @@
-// src/pages/AIInput.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -16,7 +15,7 @@ const AIInput = () => {
     const { setExtractedData, generateFormConfig } = useForm();
     const navigate = useNavigate();
 
-    // ✅ Format date: DD/MM/YYYY
+    //  Format date: DD/MM/YYYY
     const formatDate = (date) => {
         const d = new Date(date);
         const day = String(d.getDate()).padStart(2, '0');
@@ -25,7 +24,7 @@ const AIInput = () => {
         return `${day}/${month}/${year}`;
     };
 
-    // ✅ Format time: HH:MM AM/PM (12-hour format)
+    //  Format time: HH:MM AM/PM (12-hour format)
     const formatTime = (date) => {
         const d = new Date(date);
         let hours = d.getHours();
@@ -60,12 +59,12 @@ const AIInput = () => {
                 console.log(step.message);
             }
 
-            // ✅ Get current date/time
+            //  Get current date/time
             const now = new Date();
             const formattedDate = formatDate(now);
             const formattedTime = formatTime(now);
 
-            // ✅ Extract data from user's text
+            //  Extract data from user's text
             const extractedData = {
                 incidentType: detectIncidentType(inputText),
                 date: extractDate(inputText) || formattedDate,
@@ -93,7 +92,7 @@ const AIInput = () => {
         }
     };
 
-    // ✅ Helper functions for extraction
+    //  Helper functions for extraction
     const detectIncidentType = (text) => {
         const lower = text.toLowerCase();
         if (lower.includes('car') || lower.includes('accident') || lower.includes('driving') || lower.includes('vehicle') || lower.includes('crash')) {
@@ -114,7 +113,7 @@ const AIInput = () => {
         return 'General Incident';
     };
 
-    // ✅ Extract date from text (supports multiple formats)
+    //  Extract date from text (supports multiple formats)
     const extractDate = (text) => {
         const patterns = [
             // DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY
@@ -152,7 +151,7 @@ const AIInput = () => {
         return null;
     };
 
-    // ✅ Extract time from text
+    //  Extract time from text
     const extractTime = (text) => {
         const patterns = [
             // HH:MM AM/PM
