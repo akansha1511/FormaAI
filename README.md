@@ -1,132 +1,270 @@
-# FormaAI
-<p align="center">
+<div align="center">
 
-![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-Backend-black?style=for-the-badge&logo=express)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-AI-412991?style=for-the-badge&logo=openai&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+<img src="https://capsule-render.vercel.app/api?type=waving&height=280&color=0:4F46E5,30:7C3AED,60:06B6D4,100:10B981&text=FormaAI&fontSize=70&fontAlignY=40&fontColor=ffffff&animation=fadeIn"/>
+
+# 🤖 AI-Augmented Dynamic Form Engine
+
+### *Transform Natural Language into Intelligent Dynamic Forms*
+
+<p>
+<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&weight=700&size=24&duration=2500&pause=1000&color=22D3EE&center=true&vCenter=true&width=900&lines=Describe+Your+Form+in+Plain+English;AI+Generates+Smart+Forms+Instantly;Powered+by+React+%7C+Node.js+%7C+MongoDB+%7C+OpenAI;Fast.+Intelligent.+Scalable.+🚀"/>
+</p>
+
+<p>
+
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
+<img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
+<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white"/>
+<img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
+<img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white"/>
+<img src="https://img.shields.io/badge/Tailwind-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
 
 </p>
 
-
-<p align="center">
-<b>AI-Augmented Dynamic Form Engine</b>
-
-Convert plain English descriptions into intelligent, structured forms using Artificial Intelligence.
-
-</p>
+</div>
 
 ---
 
-## ✨ Overview
+# ✨ Overview
 
-FormaAI is an AI-powered web application that automatically generates structured forms from user descriptions. It extracts key information using AI, creates dynamic fields, validates inputs, and securely stores submissions.
+**FormaAI** is an AI-powered platform that converts plain English descriptions into fully functional, structured forms.
 
----
-
-## 🎯 Key Features
-
-- 🤖 AI-Powered Form Generation
-- 📝 Dynamic Form Rendering
-- 🔐 User Authentication
-- 💾 Draft Saving
-- 📊 Dashboard
-- 📄 Resume Parsing
-- 📱 Responsive UI
-- ⚡ Fast Performance
+Instead of manually designing forms, simply describe what you need—and FormaAI automatically generates the fields, validations, and layout using AI.
 
 ---
 
-## 🛠 Tech Stack
+# 🎯 Why FormaAI?
 
-| Category | Technology |
-|-----------|------------|
-| Frontend | React, Vite, Tailwind CSS |
-| Backend | Node.js, Express.js |
-| Database | MongoDB Atlas |
-| AI | OpenAI API |
-| Tools | Git, GitHub, Postman |
+<table>
+<tr>
+<td width="50%">
+
+### 🤖 AI Powered
+
+Generate complete forms from natural language.
+
+</td>
+
+<td width="50%">
+
+### ⚡ Lightning Fast
+
+Create forms within seconds.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### 🔒 Secure
+
+Authentication and secure data storage.
+
+</td>
+
+<td>
+
+### 📱 Responsive
+
+Optimized for desktop, tablet, and mobile.
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 📂 Project Structure
+# 🚀 Features
+
+| Feature               | Description                       |
+| --------------------- | --------------------------------- |
+| 🤖 AI Form Generation | Converts prompts into forms       |
+| 📝 Dynamic Fields     | Auto-generated form components    |
+| 📄 Resume Parsing     | Extract structured candidate data |
+| 💾 Save Drafts        | Continue editing anytime          |
+| 📊 Dashboard          | Manage created forms              |
+| 🔐 Authentication     | Secure login system               |
+| 📱 Responsive UI      | Works on all devices              |
+
+---
+
+# 🛠 Tech Stack
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=react,vite,nodejs,express,mongodb,tailwind,git,github,vscode"/>
+
+</div>
+
+---
+
+# 🏗 System Architecture
 
 ```text
-FormaAI/
+                ┌────────────────────┐
+                │    User Prompt     │
+                └─────────┬──────────┘
+                          │
+                          ▼
+              ┌──────────────────────┐
+              │      OpenAI API      │
+              └─────────┬────────────┘
+                        │
+                        ▼
+           ┌───────────────────────────┐
+           │ Dynamic Form Generator    │
+           └─────────┬─────────────────┘
+                     │
+          ┌──────────┴───────────┐
+          ▼                      ▼
+  MongoDB Database        React Frontend
+          │                      │
+          └──────────┬───────────┘
+                     ▼
+              User Dashboard
+```
+
+---
+
+# 📂 Project Structure
+
+```text
+FormaAI
 │
-├── frontend/
-├── backend/
-├── database/
-├── ai/
-├── docs/
+├── frontend
+│   ├── components
+│   ├── pages
+│   ├── assets
+│   └── src
+│
+├── backend
+│   ├── controllers
+│   ├── middleware
+│   ├── routes
+│   ├── models
+│   └── server.js
+│
+├── docs
 └── README.md
 ```
 
 ---
 
-## 🚀 Installation
+# ⚙️ Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/YOUR_USERNAME/FormaAI.git
 
 cd FormaAI
 
+# Install frontend
+cd frontend
 npm install
 
+# Install backend
+cd ../backend
+npm install
+```
+
+---
+
+# ▶️ Run Locally
+
+```bash
+# Backend
+npm start
+
+# Frontend
 npm run dev
 ```
 
 ---
 
-## 👨‍💻 Team Members
+# 📸 Screenshots
 
-| Member | Role |
-|---------|------|
-| Prajjwal | Frontend/UI |
-| Ritika | Dynamic Forms |
-| Gourav | Backend |
-| Shruti | Database |
-| Bhavana | AI |
-| Akansha | Testing, DevOps & Documentation |
+<div align="center">
 
----
+| Home Page         | AI Generated Form |
+| ----------------- | ----------------- |
+| 📷 Add Screenshot | 📷 Add Screenshot |
 
-## 🌟 Future Enhancements
+| Dashboard         | Resume Parser     |
+| ----------------- | ----------------- |
+| 📷 Add Screenshot | 📷 Add Screenshot |
 
-- 🌙 Dark Mode
-- 🌐 Multi-language Support
-- 🎙 Voice Input
-- 📈 Analytics Dashboard
-- 📤 PDF Export
-- 📧 Email Notifications
+</div>
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository
-2. Create a new branch
-3. Commit your changes
-4. Push your branch
-5. Create a Pull Request
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
----
+# 🎥 Demo
 
 <p align="center">
 
-⭐ Star this repository if you found it useful!
-
-Made with ❤️ by Team FormaAI
+Replace this with your project GIF or screen recording.
 
 </p>
+
+---
+
+# 🗺 Roadmap
+
+* ✅ AI Form Generation
+* ✅ Authentication
+* ✅ Dashboard
+* ✅ Resume Parsing
+* 🔄 PDF Export
+* 🔄 Voice Input
+* 🔄 Multi-language Support
+* 🔄 Analytics Dashboard
+* 🔄 AI Form Suggestions
+
+---
+
+# 👥 Team
+
+| Name     | Role                            |
+| -------- | ------------------------------- |
+| Prajjwal | Frontend Development            |
+| Ritika   | Dynamic Form Development        |
+| Gourav   | Backend & Authentication        |
+| Shruti   | Database Management             |
+| Bhavana  | AI Integration                  |
+| Akansha  | Testing, Documentation & DevOps |
+
+---
+
+# 🤝 Contributing
+
+Contributions are always welcome!
+
+```bash
+Fork 🍴
+   ↓
+Create Branch 🌿
+   ↓
+Commit Changes 💻
+   ↓
+Push 🚀
+   ↓
+Open Pull Request 🎉
+```
+
+
+
+---
+
+<div align="center">
+
+## ⭐ If you like FormaAI, give it a Star!
+
+<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&weight=700&size=20&duration=3000&pause=1000&color=22D3EE&center=true&vCenter=true&width=600&lines=Thanks+for+visiting+FormaAI!;Happy+Coding!+🚀"/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&height=140&section=footer&color=0:10B981,50:06B6D4,100:4F46E5"/>
+
+</div>
+
+
+
+
