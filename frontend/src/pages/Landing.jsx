@@ -1,4 +1,3 @@
-// src/pages/Landing.jsx
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';  // 
 import { motion, useAnimation, useInView } from 'framer-motion';
