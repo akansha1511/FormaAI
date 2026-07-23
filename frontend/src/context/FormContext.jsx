@@ -1,3 +1,4 @@
+// src/context/FormContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Create the context
@@ -12,9 +13,42 @@ export const useForm = () => {
   return context;
 };
 
-// Form Provider component
+// ✅ Helper to save form to localStorage
+const saveFormToHistory = (formData, extractedData) => {
+  const allForms = JSON.parse(localStorage.getItem('allForms') || '[]');
+
+  // Get current user
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+  const newForm = {
+    id: Date.now(),
+    title: extractedData?.incidentType || 'Form Submission',
+    date: new Date().toISOString().split('T')[0],
+    status: 'Completed',
+    data: formData,
+    extractedData: extractedData,
+    userId: user?.id || 'unknown',
+    userName: user?.name || 'Guest',
+    reference: `F-${new Date().getFullYear()}-${String(allForms.length + 1).padStart(3, '0')}`,
+    submittedAt: new Date().toISOString()
+  };
+
+  allForms.push(newForm);
+  localStorage.setItem('allForms', JSON.stringify(allForms));
+
+  // ✅ Update form count
+  const currentCount = parseInt(localStorage.getItem('formCount') || '0');
+  localStorage.setItem('formCount', (currentCount + 1).toString());
+
+  return newForm;
+};
+
+// ✅ Get all forms
+const getAllForms = () => {
+  return JSON.parse(localStorage.getItem('allForms') || '[]');
+};
+
 export const FormProvider = ({ children }) => {
-  // Form state
   const [formData, setFormData] = useState({});
   const [formConfig, setFormConfig] = useState(null);
   const [currentStep, setCurrentStep] = useState(0);
@@ -23,32 +57,23 @@ export const FormProvider = ({ children }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
-  const [formStatus, setFormStatus] = useState('draft'); // 'draft' | 'submitted' | 'review'
+  const [formStatus, setFormStatus] = useState('draft');
+  const [allForms, setAllForms] = useState([]);
 
-  // Load draft on mount
+  // Load forms on mount
   useEffect(() => {
-    const savedDraft = localStorage.getItem('formDraft');
-    if (savedDraft) {
-      try {
-        const parsed = JSON.parse(savedDraft);
-        setFormData(parsed);
-      } catch (e) {
-        localStorage.removeItem('formDraft');
-      }
-    }
+    setAllForms(getAllForms());
   }, []);
 
   // Update form data
   const updateFormData = (data) => {
     setFormData(prev => ({ ...prev, ...data }));
-    // Auto-save draft after update
     autoSaveDraft({ ...formData, ...data });
   };
 
-  // Set form field with validation
+  // Set form field
   const setField = (fieldName, value) => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    // Clear error for this field if it exists
     if (errors[fieldName]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -56,11 +81,10 @@ export const FormProvider = ({ children }) => {
         return newErrors;
       });
     }
-    // Auto-save draft
     autoSaveDraft({ ...formData, [fieldName]: value });
   };
 
-  // Auto-save draft to localStorage
+  // Auto-save draft
   const autoSaveDraft = (data) => {
     try {
       localStorage.setItem('formDraft', JSON.stringify(data || formData));
@@ -69,7 +93,7 @@ export const FormProvider = ({ children }) => {
     }
   };
 
-  // Add error for a field
+  // Set field error
   const setFieldError = (fieldName, errorMessage) => {
     setErrors(prev => ({ ...prev, [fieldName]: errorMessage }));
   };
@@ -77,51 +101,6 @@ export const FormProvider = ({ children }) => {
   // Clear all errors
   const clearErrors = () => {
     setErrors({});
-  };
-
-  // Validate a single field
-  const validateField = (fieldName, value, rules = {}) => {
-    if (rules.required && !value) {
-      return `${fieldName} is required`;
-    }
-    if (rules.minLength && value?.length < rules.minLength) {
-      return `${fieldName} must be at least ${rules.minLength} characters`;
-    }
-    if (rules.maxLength && value?.length > rules.maxLength) {
-      return `${fieldName} must be at most ${rules.maxLength} characters`;
-    }
-    if (rules.email && !/\S+@\S+\.\S+/.test(value)) {
-      return 'Please enter a valid email address';
-    }
-    if (rules.phone && !/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value)) {
-      return 'Please enter a valid phone number';
-    }
-    if (rules.pattern && !rules.pattern.test(value)) {
-      return rules.patternMessage || 'Invalid format';
-    }
-    return null;
-  };
-
-  // Validate entire form
-  const validateForm = (data = formData) => {
-    const newErrors = {};
-    const fields = formConfig?.sections?.flatMap(s => s.fields) || [];
-    
-    fields.forEach(field => {
-      const value = data[field.id];
-      if (field.required && !value) {
-        newErrors[field.id] = `${field.label} is required`;
-      }
-      if (field.validation) {
-        const error = validateField(field.id, value, field.validation);
-        if (error) {
-          newErrors[field.id] = error;
-        }
-      }
-    });
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   // Reset form completely
@@ -166,30 +145,50 @@ export const FormProvider = ({ children }) => {
     return localStorage.getItem('formDraft') !== null;
   };
 
-  // Submit form
+  // ✅ Submit form - NOW SAVES TO HISTORY
   const submitForm = async () => {
-    // Validate before submit
     if (!validateForm()) {
       return { success: false, errors: 'Please fix all errors before submitting' };
     }
 
     setIsLoading(true);
     try {
-      // Simulate API submission - Replace with actual API
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Clear draft after successful submission
+
+      // ✅ Save form to history
+      const savedForm = saveFormToHistory(formData, extractedData);
+      console.log('Form saved:', savedForm);
+
+      // ✅ Update all forms list
+      setAllForms(getAllForms());
+
       localStorage.removeItem('formDraft');
       setIsSubmitted(true);
       setFormStatus('submitted');
-      
-      return { success: true };
+
+      return { success: true, form: savedForm };
     } catch (error) {
       setFormStatus('error');
       return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Validate form
+  const validateForm = (data = formData) => {
+    const newErrors = {};
+    const fields = formConfig?.sections?.flatMap(s => s.fields) || [];
+
+    fields.forEach(field => {
+      const value = data[field.id];
+      if (field.required && !value) {
+        newErrors[field.id] = `${field.label} is required`;
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // Navigation functions
@@ -200,29 +199,20 @@ export const FormProvider = ({ children }) => {
   };
 
   const nextStep = () => {
-    // Validate current section before moving forward
     const currentSection = formConfig?.sections?.[currentStep];
     if (currentSection?.fields) {
-      const sectionData = {};
+      let hasError = false;
       currentSection.fields.forEach(field => {
-        sectionData[field.id] = formData[field.id];
-      });
-      // Only validate if fields exist
-      if (Object.keys(sectionData).length > 0) {
-        // Simple validation for current section
-        let hasError = false;
-        currentSection.fields.forEach(field => {
-          if (field.required && !formData[field.id]) {
-            setFieldError(field.id, `${field.label} is required`);
-            hasError = true;
-          }
-        });
-        if (hasError) {
-          return false;
+        if (field.required && !formData[field.id]) {
+          setFieldError(field.id, `${field.label} is required`);
+          hasError = true;
         }
+      });
+      if (hasError) {
+        return false;
       }
     }
-    
+
     if (currentStep < (formConfig?.sections?.length || 1) - 1) {
       setCurrentStep(currentStep + 1);
       return true;
@@ -238,91 +228,42 @@ export const FormProvider = ({ children }) => {
     return false;
   };
 
-  // Generate form config from extracted data
+  // Generate form config
   const generateFormConfig = (extractedData) => {
     setExtractedData(extractedData);
-    
-    // This would be dynamically generated based on the extracted data
-    // For demo, we'll create a sample config
+
     const config = {
       sections: [
         {
           id: 'personal',
           title: 'Personal Information',
           fields: [
-            { 
-              id: 'fullName', 
-              type: 'text', 
-              label: 'Full Name', 
-              required: true,
-              validation: { minLength: 2, maxLength: 50 }
-            },
-            { 
-              id: 'email', 
-              type: 'email', 
-              label: 'Email Address', 
-              required: true,
-              validation: { email: true }
-            },
-            { 
-              id: 'phone', 
-              type: 'tel', 
-              label: 'Phone Number',
-              validation: { phone: true }
-            },
+            { id: 'fullName', type: 'text', label: 'Full Name', required: true },
+            { id: 'email', type: 'email', label: 'Email Address', required: true },
+            { id: 'phone', type: 'tel', label: 'Phone Number' },
           ]
         },
         {
           id: 'incident',
           title: 'Incident Details',
           fields: [
-            { 
-              id: 'type', 
-              type: 'select', 
-              label: 'Incident Type', 
-              options: ['Accident', 'Theft', 'Damage', 'Other'], 
-              required: true 
-            },
-            { 
-              id: 'date', 
-              type: 'date', 
-              label: 'Date of Incident', 
-              required: true 
-            },
-            { 
-              id: 'description', 
-              type: 'textarea', 
-              label: 'Description', 
-              required: true,
-              validation: { minLength: 10, maxLength: 1000 }
-            },
+            { id: 'type', type: 'select', label: 'Incident Type', options: ['Accident', 'Theft', 'Damage', 'Other'], required: true },
+            { id: 'date', type: 'date', label: 'Date of Incident', required: true },
+            { id: 'description', type: 'textarea', label: 'Description', required: true },
           ]
         },
         {
           id: 'additional',
           title: 'Additional Information',
           fields: [
-            { 
-              id: 'witnesses', 
-              type: 'text', 
-              label: 'Witnesses' 
-            },
-            { 
-              id: 'policeReport', 
-              type: 'checkbox', 
-              label: 'Police Report Filed' 
-            },
-            { 
-              id: 'severity', 
-              type: 'radio', 
-              label: 'Severity', 
-              options: ['Low', 'Medium', 'High', 'Critical'] 
-            },
+            { id: 'witnesses', type: 'text', label: 'Witnesses' },
+            { id: 'policeReport', type: 'checkbox', label: 'Police Report Filed' },
+            { id: 'severity', type: 'radio', label: 'Severity', options: ['Low', 'Medium', 'High', 'Critical'] },
           ]
         }
       ]
     };
-    
+
     setFormConfig(config);
     return config;
   };
@@ -349,16 +290,29 @@ export const FormProvider = ({ children }) => {
     return true;
   };
 
-  // Get form progress percentage
+  // Get progress percentage
   const getProgress = () => {
     if (!formConfig) return 0;
     const totalSteps = formConfig.sections.length;
     return ((currentStep + 1) / totalSteps) * 100;
   };
 
-  // Value object to provide to consumers
+  // ✅ Get all forms (for dashboard)
+  const getForms = () => {
+    return getAllForms();
+  };
+
+  // ✅ Get user's forms
+  const getUserForms = () => {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const allForms = getAllForms();
+    if (user) {
+      return allForms.filter(f => f.userId === user.id);
+    }
+    return allForms;
+  };
+
   const value = {
-    // State
     formData,
     setFormData,
     formConfig,
@@ -377,35 +331,28 @@ export const FormProvider = ({ children }) => {
     setDraftSaved,
     formStatus,
     setFormStatus,
-
-    // Data operations
+    allForms,
+    setAllForms,
     updateFormData,
     setField,
     setFieldError,
     clearErrors,
-    validateField,
     validateForm,
-
-    // Form actions
     resetForm,
     saveDraft,
     loadDraft,
     hasDraft,
     submitForm,
-
-    // Navigation
     goToStep,
     nextStep,
     previousStep,
-
-    // Config
     generateFormConfig,
     getCurrentSection,
     getTotalSteps,
-
-    // Utilities
     isFormComplete,
     getProgress,
+    getForms,
+    getUserForms,
   };
 
   return (
