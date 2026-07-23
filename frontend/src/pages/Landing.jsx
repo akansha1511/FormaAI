@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // 
 import { motion, useAnimation, useInView } from 'framer-motion';
 import {
     FiZap,
@@ -28,6 +28,7 @@ const Landing = () => {
     const controls = useAnimation();
     const ref = useRef(null);
     const inView = useInView(ref, { once: true });
+    const navigate = useNavigate();  // 
 
     React.useEffect(() => {
         if (inView) {
@@ -127,7 +128,7 @@ const Landing = () => {
 
     return (
         <div className="min-h-screen bg-white overflow-x-hidden">
-            {/* Enhanced Navigation */}
+            {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
@@ -189,7 +190,7 @@ const Landing = () => {
                 )}
             </nav>
 
-            {/* Hero Section - Enhanced */}
+            {/* Hero Section */}
             <section className="relative pt-32 pb-20 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-linear-to-br from-blue-50/50 via-white to-cyan-50/30" />
                 <div className="absolute top-20 right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
@@ -220,7 +221,16 @@ const Landing = () => {
                                         <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                                     </Button>
                                 </Link>
-                                <Button variant="outline" size="lg">
+
+
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    onClick={() => {
+                                        console.log('Watch Demo clicked');
+                                        alert('🎬 Demo video coming soon!\n\nWe\'re working on an amazing demo for you.');
+                                    }}
+                                >
                                     Watch Demo
                                 </Button>
                             </div>
@@ -230,7 +240,7 @@ const Landing = () => {
                                     {['JD', 'MC', 'ER', 'AK'].map((initials, i) => (
                                         <div
                                             key={i}
-                                            className={`w-10 h-10 rounded-full bg-linear-to-br from-blue-600 to-cyan-400 border-2 border-white flex items-center justify-center text-white text-sm font-medium shadow-lg`}
+                                            className="w-10 h-10 rounded-full bg-linear-to-br from-blue-600 to-cyan-400 border-2 border-white flex items-center justify-center text-white text-sm font-medium shadow-lg"
                                         >
                                             {initials}
                                         </div>
@@ -269,7 +279,7 @@ const Landing = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-sm font-medium text-gray-900">Input Description</p>
-                                                    <p className="text-xs text-gray-500">"Yesterday evening I was driving on N-48 when..."</p>
+                                                    <p className="text-xs text-gray-500">"Yesterday evening I was driving on NH-48 when..."</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -377,7 +387,7 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* How It Works - Enhanced */}
+            {/* How It Works Section */}
             <section id="how-it-works" className="py-24 px-4 bg-linear-to-b from-gray-50 to-white">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
@@ -398,7 +408,6 @@ const Landing = () => {
                     </motion.div>
 
                     <div className="grid md:grid-cols-3 gap-8 relative">
-                        {/* Connection Lines */}
                         <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-linear-to-r from-blue-600/30 via-cyan-500/30 to-blue-600/30 -translate-y-1/2" />
 
                         {[
@@ -448,7 +457,7 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Testimonials Section */}
             <section id="testimonials" className="py-24 px-4">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
@@ -500,7 +509,7 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* CTA Section - Enhanced */}
+            {/* CTA Section */}
             <section className="py-20 px-4 bg-linear-to-r from-blue-600 via-cyan-600 to-blue-600 relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20" />
                 <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -523,7 +532,17 @@ const Landing = () => {
                                     <FiArrowRight className="ml-2" />
                                 </Button>
                             </Link>
-                            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+
+
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="border-white text-white hover:bg-white/10"
+                                onClick={() => {
+                                    console.log('Schedule Demo clicked');
+                                    alert('📅 Schedule a demo with our team!\n\nPlease email us at: demo@forma-ai.com');
+                                }}
+                            >
                                 Schedule Demo
                             </Button>
                         </div>
@@ -532,7 +551,7 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Footer - Enhanced */}
+            {/* Footer */}
             <footer className="py-16 px-4 bg-gray-900 text-gray-300">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid md:grid-cols-4 gap-12 mb-12">
@@ -594,22 +613,22 @@ const Landing = () => {
                     </div>
 
                     <div className="pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-                        <p>© 2026 Forma AI. All rights reserved. Built with ❤️ for the future of forms.</p>
+                        <p>© {new Date().getFullYear()} Forma AI. All rights reserved. Built with ❤️ for the future of forms.</p>
                     </div>
                 </div>
             </footer>
 
             <style jsx>{`
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-      `}</style>
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .animate-gradient {
+                    background-size: 200% 200%;
+                    animation: gradient 3s ease infinite;
+                }
+            `}</style>
         </div>
     );
 };

@@ -4,8 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AnimatePresence } from 'framer-motion';
 
 // Layouts
-import mainLayout from './layouts/mainLayout';
-import authLayout from './layouts/authLayout';
+import MainLayout from './layouts/MainLayout';
+import AuthLayout from './layouts/AuthLayout';
 
 // Pages
 import Landing from './pages/Landing';
@@ -30,13 +30,13 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
-              <Route element={<authLayout />}>
+              <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
               </Route>
 
               {/* Protected Routes */}
-              <Route element={<mainLayout />}>
+              <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/ai-input" element={<AI_Input />} />
                 <Route path="/form" element={<Dynamic_Form />} />
