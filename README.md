@@ -1,16 +1,12 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&height=280&color=0:4F46E5,30:7C3AED,60:06B6D4,100:10B981&text=FormaAI&fontSize=70&fontAlignY=40&fontColor=ffffff&animation=fadeIn"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&height=280&text=FormaAI&fontSize=70&fontColor=ffffff&color=0:0F172A,25:3B82F6,50:06B6D4,75:14B8A6,100:22C55E&animation=twinkling"/>
 
-# 🤖 AI-Augmented Dynamic Form Engine
+### *🤖 AI-Augmented Dynamic Form Engine*
 
-### *Transform Natural Language into Intelligent Dynamic Forms*
+<img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=24&pause=1000&color=A855F7&center=true&vCenter=true&width=900&lines=Describe+Your+Requirements;AI+Generates+Dynamic+Forms;Fast+Smart+Scalable;Powered+by+OpenAI"/>
 
-<p>
-<img src="https://readme-typing-svg.herokuapp.com?font=Poppins&weight=700&size=24&duration=2500&pause=1000&color=22D3EE&center=true&vCenter=true&width=900&lines=Describe+Your+Form+in+Plain+English;AI+Generates+Smart+Forms+Instantly;Powered+by+React+%7C+Node.js+%7C+MongoDB+%7C+OpenAI;Fast.+Intelligent.+Scalable.+🚀"/>
-</p>
-
-<p>
+<br>
 
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>
 <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
@@ -18,9 +14,23 @@
 <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white"/>
 <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
 <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white"/>
-<img src="https://img.shields.io/badge/Tailwind-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+<img src="https://img.shields.io/badge/TailwindCSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
 
-</p>
+<br><br>
+
+### ✨ *Convert Plain English into Intelligent Dynamic Forms.*
+
+</div>
+
+---
+
+# 🎬 Demo
+
+<div align="center">
+
+<!-- Replace this with your own demo GIF -->
+
+<img src="https://media.tenor.com/2uyENRmiUt0AAAAC/coding.gif" width="550"/>
 
 </div>
 
