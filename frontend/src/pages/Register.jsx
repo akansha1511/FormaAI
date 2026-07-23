@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // 
 import { motion } from 'framer-motion';
-import { FiUser, FiMail, FiLock, FiCheckCircle, FiArrowLeft } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiCheckCircle } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -14,15 +14,19 @@ const Register = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-
+    
     const { register } = useAuth();
-    const navigate = useNavigate();
+    const navigate = useNavigate();  // 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
         // Validation
+        if (!name || !email || !password || !confirmPassword) {
+            setError('Please fill in all fields');
+            return;
+        }
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
@@ -37,10 +41,11 @@ const Register = () => {
         }
 
         setIsLoading(true);
-
+        
         try {
             const result = await register(name, email, password);
             if (result.success) {
+                console.log('Registration successful!');
                 navigate('/dashboard');
             } else {
                 setError(result.error || 'Registration failed. Please try again.');
@@ -146,7 +151,6 @@ const Register = () => {
                         checked={agreeTerms}
                         onChange={(e) => setAgreeTerms(e.target.checked)}
                         className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-0.5"
-                        required
                     />
                     <span className="text-sm text-gray-600">
                         I agree to the{' '}
@@ -172,12 +176,18 @@ const Register = () => {
                 </Button>
             </form>
 
-            {/* Already have account */}
+            
             <p className="text-center text-sm text-gray-600 mt-6">
                 Already have an account?{' '}
-                <Link to="/login" className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                <button
+                    onClick={() => {
+                        console.log('Sign in clicked - navigating to login');
+                        navigate('/login');
+                    }}
+                    className="text-blue-600 font-medium hover:text-blue-700 transition-colors"
+                >
                     Sign in
-                </Link>
+                </button>
             </p>
         </div>
     );
