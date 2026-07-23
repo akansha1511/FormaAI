@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Create the context
@@ -19,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ✅ ONLY 1 DEMO USER
+  // DEMO USER
   const DEMO_USERS = [
     {
       id: '1',
@@ -43,30 +42,30 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // 📝 Get all registered users from localStorage
+  //  Get all registered users from localStorage
   const getRegisteredUsers = () => {
     const users = localStorage.getItem('registeredUsers');
     return users ? JSON.parse(users) : [];
   };
 
-  // 💾 Save users to localStorage
+  //  Save users to localStorage
   const saveRegisteredUsers = (users) => {
     localStorage.setItem('registeredUsers', JSON.stringify(users));
   };
 
-  // 🔐 Login function
+  //  Login function
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // 🔍 Check demo user first
+      //  Check demo user first
       let foundUser = DEMO_USERS.find(
         u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
       );
 
-      // 🔍 If not found, check registered users
+      //  If not found, check registered users
       if (!foundUser) {
         const registeredUsers = getRegisteredUsers();
         const registeredUser = registeredUsers.find(
@@ -100,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 📝 Register function
+  //  Register function
   const register = async (name, email, password) => {
     setLoading(true);
     setError(null);
@@ -155,25 +154,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 🚪 Logout function
+  //  Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
     setError(null);
   };
 
-  // 🧹 Clear error
+  //  Clear error
   const clearError = () => {
     setError(null);
   };
 
-  // 👤 Get user by email
+  //  Get user by email
   const getUserByEmail = (email) => {
     const allUsers = [...DEMO_USERS, ...getRegisteredUsers()];
     return allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
   };
 
-  // 🔄 Reset password
+  //  Reset password
   const resetPassword = async (email) => {
     setLoading(true);
     setError(null);
