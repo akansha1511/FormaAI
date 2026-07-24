@@ -1,32 +1,28 @@
 """
-FormaAI Prompt Template
-
-This module stores the prompt that will be sent to the AI model.
+Prompt Builder for FormaAI
 """
 
-def build_form_prompt(user_description):
-    prompt = f"""
-You are an AI assistant for FormaAI.
+def build_form_prompt(user_input):
+    return f"""
+You are an AI assistant that generates dynamic forms.
 
-Analyze the following incident description.
+Based on the following user request:
 
-Extract:
-- Incident Type
-- Date
-- Time
-- Location
-- Vehicle
-- Description
-- Severity
-- Injuries
-- Police Report
-- Insurance Company
+{user_input}
 
-Return ONLY valid JSON.
+Generate only a JSON response using this format:
 
-Incident:
+{{
+  "success": true,
+  "title": "Generated Form",
+  "fields": [
+    {{
+      "label": "",
+      "type": "",
+      "required": true
+    }}
+  ]
+}}
 
-{user_description}
+Do not include explanations.
 """
-
-    return prompt
