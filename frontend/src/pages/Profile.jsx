@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -147,7 +146,7 @@ const Profile = () => {
         toast.info('Password reset link will be sent to your registered email address.');
     };
 
-    // ✅ Profile Picture Functions
+    // Profile Picture Functions
     const handleImageClick = () => {
         fileInputRef.current?.click();
     };
@@ -231,7 +230,7 @@ const Profile = () => {
                 )}
             </div>
 
-            {/* ✅ Profile Header with Image Upload */}
+            {/* Profile Header with Image Upload */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     {/* Profile Picture with Upload */}
