@@ -1,3 +1,4 @@
+// src/pages/AIInput.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -191,12 +192,12 @@ const AIInput = () => {
         }, formatTime(new Date()));
     };
 
-    // detectIncidentType - Car Theft detection added
+    // ✅ Fixed: detectIncidentType - Car Theft detection added
     const detectIncidentType = (text) => {
         return safeGet(() => {
             const lower = text.toLowerCase();
 
-            //  Car Theft - Check FIRST
+            // ✅ Car Theft - Check FIRST
             if ((lower.includes('car') || lower.includes('vehicle')) && 
                 (lower.includes('stolen') || lower.includes('theft') || 
                  lower.includes('missing') || lower.includes('stole'))) {
@@ -322,7 +323,7 @@ const AIInput = () => {
         }, '');
     };
 
-    // extractPoliceStation
+    // ✅ Fixed: extractPoliceStation
     const extractPoliceStation = (text) => {
         return safeGet(() => {
             const patterns = [
@@ -345,7 +346,7 @@ const AIInput = () => {
         }, '');
     };
 
-    // extractPoliceCharges
+    // ✅ Fixed: extractPoliceCharges
     const extractPoliceCharges = (text) => {
         return safeGet(() => {
             const match = text.match(/sections?\s*(\d{3})(?:\s*,\s*(\d{3}))?\s*(?:and\s*(\d{3}))?/i);
@@ -387,7 +388,7 @@ const AIInput = () => {
         }, '');
     };
 
-    //  extractClaimNumber
+    // ✅ Fixed: extractClaimNumber
     const extractClaimNumber = (text) => {
         return safeGet(() => {
             const match = text.match(/claim\s*(?:number|no\.?)?\s*:?\s*([A-Z0-9/\-]+)/i);
@@ -424,7 +425,7 @@ const AIInput = () => {
         }, '');
     };
 
-    //  extractEstimatedLoss
+    // ✅ Fixed: extractEstimatedLoss
     const extractEstimatedLoss = (text) => {
         return safeGet(() => {
             const match = text.match(/estimated\s*(?:to be|at)?\s*[\₹\$€£]?\s?([\d.,]+\s*(?:crores?|lakhs?|thousand)?)/i);
@@ -443,7 +444,7 @@ const AIInput = () => {
         }, '');
     };
 
-    //  extractVehicle
+    // ✅ Fixed: extractVehicle
     const extractVehicle = (text) => {
         return safeGet(() => {
             const lower = text.toLowerCase();
