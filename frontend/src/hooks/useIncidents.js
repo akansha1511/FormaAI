@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { incidentAPI } from '../services/api';
+import api from '../services/api';
 import { useAuth } from './useAuth';
 import { useDebounce } from './useDebounce';
 
