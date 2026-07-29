@@ -21,6 +21,8 @@ import Settings from './pages/Settings';
 import Profile from './pages/Profile';
 import Forms from './pages/Forms';
 import FormDetails from './pages/FormDetails';
+import IncidentDetail from './pages/IncidentDetail'; // ✅ ADD THIS
+import NotFound from './pages/NotFound'; // ✅ ADD THIS
 
 // Context
 import { AuthProvider } from './context/AuthContext';
@@ -45,13 +47,14 @@ function App() {
                                 <Route path="/form/:id" element={<FormDetails />} />
                                 <Route path="/review" element={<Review />} />
                                 <Route path="/success" element={<Success />} />
-                                {/* ✅ NEW ROUTES */}
                                 <Route path="/analytics" element={<Analytics />} />
                                 <Route path="/settings" element={<Settings />} />
                                 <Route path="/profile" element={<Profile />} />
                                 <Route path="/forms" element={<Forms />} />
+                                <Route path="/incident/:id" element={<IncidentDetail />} /> {/* ✅ ADD THIS */}
                             </Route>
-                            <Route path="*" element={<Navigate to="/" replace />} />
+                            {/* ✅ REPLACE this with NotFound */}
+                            <Route path="*" element={<NotFound />} />
                         </Routes>
                     </AnimatePresence>
                     <ToastContainer
