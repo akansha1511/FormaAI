@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { authAPI } from '../services/api';
+import api from '../services/api';
 import { useLocalStorage } from './useLocalStorage';
 
 export const useAuth = () => {
