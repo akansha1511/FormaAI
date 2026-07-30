@@ -16,9 +16,9 @@ def generate_form(user_input):
             "success": True,
             "title": "Student Registration Form",
             "fields": [
-                {"label": "Student Name", "type": "text", "required": True},
-                {"label": "Roll Number", "type": "text", "required": True},
-                {"label": "Department", "type": "text", "required": True}
+                {"label": "Student Name", "type": "text", "required": True, "placeholder": "Enter student name"},
+                {"label": "Roll Number", "type": "text", "required": True, "placeholder": "Enter roll number"},
+                {"label": "Department", "type": "text", "required": True, "placeholder": "Enter department"}   
             ]
         }
 
@@ -27,9 +27,9 @@ def generate_form(user_input):
             "success": True,
             "title": "Employee Registration Form",
             "fields": [
-                {"label": "Employee Name", "type": "text", "required": True},
-                {"label": "Employee ID", "type": "text", "required": True},
-                {"label": "Department", "type": "text", "required": True}
+                {"label": "Employee Name", "type": "text", "required": True, "placeholder": "Enter employee name"},
+                {"label": "Employee ID", "type": "text", "required": True, "placeholder": "Enter employee ID"},
+                {"label": "Department", "type": "text", "required": True, "placeholder": "Enter department"}
             ]
         }
 
@@ -38,9 +38,9 @@ def generate_form(user_input):
             "success": True,
             "title": "Patient Registration Form",
             "fields": [
-                {"label": "Patient Name", "type": "text", "required": True},
-                {"label": "Age", "type": "number", "required": True},
-                {"label": "Symptoms", "type": "textarea", "required": True}
+                {"label": "Patient Name", "type": "text", "required": True, "placeholder": "Enter patient name"},
+                {"label": "Age", "type": "number", "required": True, "placeholder": "Enter age"},
+                {"label": "Symptoms", "type": "textarea", "required": True, "placeholder": "Describe symptoms"}
             ]
         }
 
@@ -50,9 +50,10 @@ def generate_form(user_input):
             "title": "Generated Form",
             "fields": [
                 {
-                    "label": "Full Name",
-                    "type": "text",
-                    "required": True
+                   "label": "Full Name",
+                   "type": "text",
+                   "required": True,
+                   "placeholder": "Enter your full name"
                 }
             ]
         }
