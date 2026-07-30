@@ -168,7 +168,7 @@ const Dashboard = () => {
                                             }`}>
                                             {form.status}
                                         </span>
-                                        <Link to={`/form/${form.id}`}>
+                                        <Link to="/form">
                                             <Button variant="ghost" size="sm">
                                                 View
                                                 <FiArrowRight className="ml-1" />

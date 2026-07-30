@@ -3,7 +3,7 @@ import { Outlet, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
 
-const authLayout = () => {
+const AuthLayout = () => {
     return (
         <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-blue-50/30 flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background Decorative Elements */}
@@ -61,4 +61,4 @@ const authLayout = () => {
     );
 };
 
-export default authLayout;
+export default AuthLayout;

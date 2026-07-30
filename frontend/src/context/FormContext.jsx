@@ -11,12 +11,61 @@ export const useForm = () => {
   }
   return context;
 };
-
+const defaultFormConfig = {
+    sections: [
+        {
+            id: "personal",
+            title: "Personal Information",
+            fields: [
+                {
+                    id: "fullName",
+                    label: "Full Name",
+                    type: "text",
+                    required: true
+                },
+                {
+                    id: "email",
+                    label: "Email",
+                    type: "email",
+                    required: true
+                },
+                {
+                    id: "phone",
+                    label: "Phone Number",
+                    type: "tel"
+                }
+            ]
+        },
+        {
+            id: "incident",
+            title: "Incident Details",
+            fields: [
+                {
+                    id: "incidentType",
+                    label: "Incident Type",
+                    type: "select",
+                    required: true,
+                    options: [
+                        "Accident",
+                        "Fire",
+                        "Theft"
+                    ]
+                },
+                {
+                    id: "description",
+                    label: "Description",
+                    type: "textarea",
+                    required: true
+                }
+            ]
+        }
+    ]
+  };
 // Form Provider component
 export const FormProvider = ({ children }) => {
   // Form state
   const [formData, setFormData] = useState({});
-  const [formConfig, setFormConfig] = useState(null);
+  const [formConfig, setFormConfig] = useState(defaultFormConfig);
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [extractedData, setExtractedData] = useState(null);
@@ -59,6 +108,7 @@ export const FormProvider = ({ children }) => {
     // Auto-save draft
     autoSaveDraft({ ...formData, [fieldName]: value });
   };
+
 
   // Auto-save draft to localStorage
   const autoSaveDraft = (data) => {

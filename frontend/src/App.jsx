@@ -4,16 +4,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AnimatePresence } from 'framer-motion';
 
 // Layouts
-import mainLayout from './layouts/mainLayout';
-import authLayout from './layouts/authLayout';
+import MainLayout from './layouts/mainLayout';
+import AuthLayout from './layouts/authLayout';
 
 // Pages
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import AI_Input from './pages/AI_Input';
-import Dynamic_Form from './pages/Dynamic_Form';
+import AIInput from './pages/AI_Input';
+import DynamicForm from './pages/Dynamic_Form';
 import Review from './pages/Review';
 import Success from './pages/Success';
 
@@ -30,16 +30,16 @@ function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
-              <Route element={<authLayout />}>
+              <Route element={<AuthLayout />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
               </Route>
 
               {/* Protected Routes */}
-              <Route element={<mainLayout />}>
+              <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/ai-input" element={<AI_Input />} />
-                <Route path="/form" element={<Dynamic_Form />} />
+                <Route path="/ai-input" element={<AIInput />} />
+                <Route path="/form" element={<DynamicForm />} />
                 <Route path="/review" element={<Review />} />
                 <Route path="/success" element={<Success />} />
               </Route>
