@@ -1,18 +1,25 @@
 const jwt = require("jsonwebtoken");
 
-const authMiddleware = (req, res, next) => {
+const protect = (req, res, next) => {
   try {
-    const token = req.header("Authorization");
+    const authHeader = req.header("Authorization");
 
-    if (!token) {
+    if (!authHeader) {
       return res.status(401).json({
         success: false,
         message: "Access Denied. No Token Provided.",
       });
     }
 
+    // Extract token from "Bearer <token>"
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.split(" ")[1]
+      : authHeader;
+
+    // Verify JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Attach user to request
     req.user = decoded;
 
     next();
@@ -24,4 +31,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+module.exports = {
+  protect,
+};
