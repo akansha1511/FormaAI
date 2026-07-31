@@ -1,138 +1,129 @@
 import api from './api';
+import { API_ENDPOINTS } from '../utils/constants';
+import { sanitizeInput } from '../utils/validators';
+import { formatErrorMessage } from '../utils/errorHandler';
+import { buildQueryString } from '../utils/apiHelpers';
 
 export const incidentService = {
     /**
-     * Create a new incident
-     * @param {Object} data - Incident data
-     * @returns {Promise} - { success, data }
+     * Create incident
      */
     create: async (data) => {
         try {
-            const response = await api.post('/incidents', data);
+            const sanitizedData = {
+                ...data,
+                description: sanitizeInput(data.description),
+                location: {
+                    ...data.location,
+                    address: sanitizeInput(data.location?.address || '')
+                }
+            };
+            
+            const response = await api.post(API_ENDPOINTS.INCIDENTS.BASE, sanitizedData);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to create incident' };
+            throw new Error(formatErrorMessage(error, 'Failed to create incident'));
         }
     },
 
     /**
      * Get all incidents with filters
-     * @param {Object} params - { status, severity, type, search, page, limit }
-     * @returns {Promise} - { success, data, pagination }
      */
     getAll: async (params = {}) => {
         try {
-            const response = await api.get('/incidents', { params });
+            const queryString = buildQueryString(params);
+            const response = await api.get(`${API_ENDPOINTS.INCIDENTS.BASE}${queryString}`);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to load incidents' };
+            throw new Error(formatErrorMessage(error, 'Failed to load incidents'));
         }
     },
 
     /**
-     * Get single incident by ID
-     * @param {string} id - Incident ID
-     * @returns {Promise} - { success, data }
+     * Get single incident
      */
     getOne: async (id) => {
         try {
-            const response = await api.get(`/incidents/${id}`);
+            if (!id) throw new Error('Incident ID is required');
+            const response = await api.get(`${API_ENDPOINTS.INCIDENTS.BASE}/${id}`);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Incident not found' };
+            throw new Error(formatErrorMessage(error, 'Incident not found'));
         }
     },
 
     /**
      * Update incident
-     * @param {string} id - Incident ID
-     * @param {Object} data - Updated incident data
-     * @returns {Promise} - { success, data }
      */
     update: async (id, data) => {
         try {
-            const response = await api.put(`/incidents/${id}`, data);
+            const sanitizedData = {
+                ...data,
+                description: sanitizeInput(data.description)
+            };
+            const response = await api.put(`${API_ENDPOINTS.INCIDENTS.BASE}/${id}`, sanitizedData);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to update incident' };
+            throw new Error(formatErrorMessage(error, 'Failed to update incident'));
         }
     },
 
     /**
      * Delete incident
-     * @param {string} id - Incident ID
-     * @returns {Promise} - { success, message }
      */
     delete: async (id) => {
         try {
-            const response = await api.delete(`/incidents/${id}`);
+            const response = await api.delete(`${API_ENDPOINTS.INCIDENTS.BASE}/${id}`);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to delete incident' };
+            throw new Error(formatErrorMessage(error, 'Failed to delete incident'));
         }
     },
 
     /**
-     * AI Extraction from description
-     * @param {string} description - Incident description text
-     * @returns {Promise} - { success, data }
+     * AI Extraction
      */
     extract: async (description) => {
         try {
-            const response = await api.post('/incidents/extract', { description });
+            const sanitizedDescription = sanitizeInput(description);
+            if (!sanitizedDescription) {
+                throw new Error('Description is required');
+            }
+            const response = await api.post(API_ENDPOINTS.INCIDENTS.EXTRACT, { 
+                description: sanitizedDescription 
+            });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'AI extraction failed' };
+            throw new Error(formatErrorMessage(error, 'AI extraction failed'));
         }
     },
 
     /**
-     * Add comment to incident
-     * @param {string} id - Incident ID
-     * @param {string} text - Comment text
-     * @returns {Promise} - { success, data }
+     * Add comment
      */
     addComment: async (id, text) => {
         try {
-            const response = await api.post(`/incidents/${id}/comments`, { text });
+            const sanitizedText = sanitizeInput(text);
+            if (!sanitizedText) throw new Error('Comment text is required');
+            
+            const response = await api.post(API_ENDPOINTS.INCIDENTS.COMMENTS(id), { 
+                text: sanitizedText 
+            });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to add comment' };
+            throw new Error(formatErrorMessage(error, 'Failed to add comment'));
         }
     },
 
     /**
      * Get incident statistics
-     * @returns {Promise} - { success, data }
      */
     getStats: async () => {
         try {
-            const response = await api.get('/incidents/stats');
+            const response = await api.get(API_ENDPOINTS.INCIDENTS.STATS);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to get statistics' };
-        }
-    },
-
-    /**
-     * Upload attachment to incident
-     * @param {string} id - Incident ID
-     * @param {File} file - File to upload
-     * @returns {Promise} - { success, data }
-     */
-    uploadAttachment: async (id, file) => {
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            const response = await api.post(`/incidents/${id}/attachments`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to upload attachment' };
+            throw new Error(formatErrorMessage(error, 'Failed to get statistics'));
         }
     }
 };
