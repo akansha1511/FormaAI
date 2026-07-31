@@ -1,11 +1,14 @@
 import { useState, useCallback } from 'react';
+import { createValidator } from '../utils/validators';
 
-export const useForm = (initialValues = {}, validate = null) => {
+export const useForm = (initialValues = {}, validationRules = null) => {
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isValid, setIsValid] = useState(true);
+    
+    // Create validator if rules provided
+    const validate = validationRules ? createValidator(validationRules) : null;
 
     const handleChange = useCallback((e) => {
         const { name, value, type, checked } = e.target;
@@ -38,19 +41,17 @@ export const useForm = (initialValues = {}, validate = null) => {
             
             if (Object.keys(validationErrors).length > 0) {
                 setIsSubmitting(false);
-                return false;
+                return { success: false, errors: validationErrors };
             }
         }
         
         try {
-            await callback(values);
-            setIsValid(true);
-            return true;
-        } catch (error) {
-            setIsValid(false);
-            return false;
-        } finally {
+            const result = await callback(values);
             setIsSubmitting(false);
+            return { success: true, data: result };
+        } catch (error) {
+            setIsSubmitting(false);
+            return { success: false, error: error.message };
         }
     }, [validate, values]);
 
@@ -59,7 +60,6 @@ export const useForm = (initialValues = {}, validate = null) => {
         setErrors({});
         setTouched({});
         setIsSubmitting(false);
-        setIsValid(true);
     }, [initialValues]);
 
     const setFieldValue = useCallback((name, value) => {
@@ -83,7 +83,6 @@ export const useForm = (initialValues = {}, validate = null) => {
         errors,
         touched,
         isSubmitting,
-        isValid,
         handleChange,
         handleBlur,
         handleSubmit,
