@@ -376,6 +376,8 @@ export const getUserFriendlyMessage = (error, options = {}) => {
  * const SafeComponent = withErrorBoundary(MyComponent, () => <ErrorFallback />);
  */
 export const withErrorBoundary = (Component, fallback) => {
+    // This is a HOC that wraps components with error handling
+    // The actual ErrorBoundary class component is below
     return class ErrorBoundary extends React.Component {
         constructor(props) {
             super(props);
@@ -399,9 +401,16 @@ export const withErrorBoundary = (Component, fallback) => {
                 if (typeof fallback === 'function') {
                     return fallback(this.state.error);
                 }
-                return fallback || <div>Something went wrong</div>;
+                // Simple fallback message without JSX
+                return React.createElement('div', {
+                    style: { 
+                        padding: '20px', 
+                        textAlign: 'center',
+                        color: '#ef4444'
+                    }
+                }, 'Something went wrong. Please try again.');
             }
-            return <Component {...this.props} />;
+            return React.createElement(Component, this.props);
         }
     };
 };
@@ -491,13 +500,13 @@ export const logErrorToServer = (error, context = {}) => {
         };
 
         // Log to console in development
-        if (isDevelopment()) {
+        if (process.env.NODE_ENV === 'development') {
             console.log('Error log:', errorLog);
         }
 
         // Send to server in production
-        if (isProduction()) {
-            // Example: send to your logging endpoint
+        if (process.env.NODE_ENV === 'production') {
+            // Uncomment when you have a logging endpoint
             // fetch('/api/logs/error', {
             //   method: 'POST',
             //   headers: { 'Content-Type': 'application/json' },
