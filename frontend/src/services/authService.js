@@ -1,134 +1,130 @@
 import api from './api';
+import { API_ENDPOINTS } from '../utils/constants';
+import { 
+    isValidEmail, 
+    validatePassword,
+    sanitizeInput 
+} from '../utils/validators';
+import { formatErrorMessage } from '../utils/errorHandler';
 
 export const authService = {
     /**
      * Register a new user
-     * @param {Object} userData - { name, email, password }
-     * @returns {Promise} - { success, token, user }
      */
     register: async (userData) => {
         try {
-            const response = await api.post('/auth/register', userData);
+            // Validate input
+            const sanitizedName = sanitizeInput(userData.name);
+            const sanitizedEmail = sanitizeInput(userData.email);
+            
+            if (!isValidEmail(sanitizedEmail)) {
+                throw new Error('Invalid email address');
+            }
+            
+            const passwordValidation = validatePassword(userData.password);
+            if (!passwordValidation.isValid) {
+                throw new Error(passwordValidation.errors[0]);
+            }
+
+            const response = await api.post(API_ENDPOINTS.AUTH.REGISTER, {
+                ...userData,
+                name: sanitizedName,
+                email: sanitizedEmail
+            });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Registration failed' };
+            throw new Error(formatErrorMessage(error, 'Registration failed'));
         }
     },
 
     /**
      * Login user
-     * @param {Object} credentials - { email, password }
-     * @returns {Promise} - { success, token, user }
      */
     login: async (credentials) => {
         try {
-            const response = await api.post('/auth/login', credentials);
+            if (!credentials.email || !credentials.password) {
+                throw new Error('Email and password are required');
+            }
+            
+            const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, credentials);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Login failed' };
+            throw new Error(formatErrorMessage(error, 'Login failed'));
         }
     },
 
     /**
-     * Get current user profile
-     * @returns {Promise} - { success, user }
+     * Get current user
      */
     getMe: async () => {
         try {
-            const response = await api.get('/auth/me');
+            const response = await api.get(API_ENDPOINTS.AUTH.ME);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to get user' };
+            throw new Error(formatErrorMessage(error, 'Failed to get user'));
         }
     },
 
     /**
-     * Update user profile
-     * @param {Object} profileData - { name, phone, location, bio, etc. }
-     * @returns {Promise} - { success, profile, name }
+     * Update profile
      */
     updateProfile: async (profileData) => {
         try {
-            const response = await api.put('/auth/profile', { profile: profileData });
+            const sanitizedData = {
+                ...profileData,
+                name: sanitizeInput(profileData.name),
+                bio: sanitizeInput(profileData.bio),
+                location: sanitizeInput(profileData.location)
+            };
+            
+            const response = await api.put(API_ENDPOINTS.AUTH.PROFILE, {
+                profile: sanitizedData
+            });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Profile update failed' };
+            throw new Error(formatErrorMessage(error, 'Profile update failed'));
         }
     },
 
     /**
-     * Update user settings
-     * @param {Object} settings - { notifications, privacy, security, preferences }
-     * @returns {Promise} - { success, settings }
+     * Update settings
      */
     updateSettings: async (settings) => {
         try {
-            const response = await api.put('/auth/settings', { settings });
+            const response = await api.put(API_ENDPOINTS.AUTH.SETTINGS, { settings });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Settings update failed' };
+            throw new Error(formatErrorMessage(error, 'Settings update failed'));
         }
     },
 
     /**
      * Change password
-     * @param {Object} passwordData - { currentPassword, newPassword }
-     * @returns {Promise} - { success, message }
      */
     changePassword: async (passwordData) => {
         try {
-            const response = await api.put('/auth/change-password', passwordData);
+            const validation = validatePassword(passwordData.newPassword);
+            if (!validation.isValid) {
+                throw new Error(validation.errors[0]);
+            }
+            
+            const response = await api.put(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, passwordData);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Password change failed' };
+            throw new Error(formatErrorMessage(error, 'Password change failed'));
         }
     },
 
     /**
-     * Request password reset email
-     * @param {string} email - User's email address
-     * @returns {Promise} - { success, message }
-     */
-    requestPasswordReset: async (email) => {
-        try {
-            const response = await api.post('/auth/forgot-password', { email });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { success: false, message: 'Password reset request failed' };
-        }
-    },
-
-    /**
-     * Reset password with token
-     * @param {string} token - Reset token from email
-     * @param {string} password - New password
-     * @returns {Promise} - { success, message }
-     */
-    resetPassword: async (token, password) => {
-        try {
-            const response = await api.post(`/auth/reset-password/${token}`, { password });
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { success: false, message: 'Password reset failed' };
-        }
-    },
-
-    /**
-     * Logout user (client-side)
-     * @returns {Promise} - { success, message }
+     * Logout
      */
     logout: async () => {
         try {
-            // Optional: Call logout endpoint if backend supports it
-            // const response = await api.post('/auth/logout');
-            // return response.data;
-            
-            // Client-side logout
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             return { success: true, message: 'Logged out successfully' };
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Logout failed' };
+            throw new Error(formatErrorMessage(error, 'Logout failed'));
         }
     }
 };
