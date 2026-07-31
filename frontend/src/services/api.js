@@ -1,23 +1,26 @@
 import axios from 'axios';
+import { API_ENDPOINTS, STORAGE_KEYS } from '../utils/constants';
+import { handleApiError } from '../utils/apiHelpers';
+import { getEnv } from '../utils/helpers';
 
-// Get API URL from environment variables
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Get API URL from environment
+const API_URL = getEnv('VITE_API_URL', 'http://localhost:5000/api');
 
-// Create axios instance with default config
+// Create axios instance
 const api = axios.create({
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    timeout: 30000, // 30 seconds
+    timeout: 30000,
     withCredentials: true
 });
 
-// Request interceptor - Add token to every request
+// Request interceptor - Add token
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -28,36 +31,17 @@ api.interceptors.request.use(
     }
 );
 
-// Response interceptor - Handle common errors
+// Response interceptor - Handle errors
 api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
-        // Handle 401 Unauthorized - Token expired or invalid
+        // Handle 401 Unauthorized
         if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            // Redirect to login page
+            localStorage.removeItem(STORAGE_KEYS.TOKEN);
+            localStorage.removeItem(STORAGE_KEYS.USER);
             window.location.href = '/login';
         }
-        
-        // Handle 403 Forbidden
-        if (error.response?.status === 403) {
-            console.error('Access denied. You don\'t have permission.');
-        }
-        
-        // Handle 404 Not Found
-        if (error.response?.status === 404) {
-            console.error('Resource not found.');
-        }
-        
-        // Handle 500 Server Error
-        if (error.response?.status >= 500) {
-            console.error('Server error. Please try again later.');
-        }
-        
-        return Promise.reject(error);
+        return Promise.reject(handleApiError(error));
     }
 );
 
