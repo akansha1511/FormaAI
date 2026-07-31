@@ -10,6 +10,23 @@ from utils.json_validator import validate_response
 def generate_form(user_input):
     prompt = build_form_prompt(user_input)
     text = user_input.lower()
+    extracted_data = {}
+
+
+    if "honda" in text:
+       extracted_data["vehicle"] = "Honda"
+
+    if "toyota" in text:
+       extracted_data["vehicle"] = "Toyota"
+
+    if "deer" in text:
+       extracted_data["incidentType"] = "Animal Collision"
+
+    if "windshield" in text:
+       extracted_data["damage"] = "Windshield"
+
+    if "nh48" in text:
+       extracted_data["road"] = "NH48"
 
     if "student" in text:
         response = {
@@ -55,7 +72,8 @@ def generate_form(user_input):
                    "required": True,
                    "placeholder": "Enter your full name"
                 }
-            ]
+            ],
+               "extractedData": extracted_data
         }
 
     if validate_response(response):
