@@ -17,7 +17,22 @@ const Forms = () => {
     }, [user]);
 
     const loadForms = () => {
-        const allForms = JSON.parse(localStorage.getItem('allForms') || '[]');
+       const loadForms = async () => {
+    try {
+      const loadForms = async () => {
+    try {
+        const res = await api.get("/api/forms");
+
+        setForms(res.data.forms);
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+    } catch (err) {
+        console.error(err);
+    }
+};
         const userForms = allForms.filter(f => f.userId === user?.id || !f.userId);
         
         // ✅ SORT BY DATE - NEWEST FIRST
