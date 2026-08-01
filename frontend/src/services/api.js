@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from 'axios';
 import { API_ENDPOINTS, STORAGE_KEYS } from '../utils/constants';
 import { handleApiError } from '../utils/apiHelpers';
@@ -46,3 +47,12 @@ api.interceptors.response.use(
 );
 
 export default api;
+=======
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+export default api;
+>>>>>>> c77d407 (feat: connect frontend with backend using Axios)
