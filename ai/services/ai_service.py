@@ -6,6 +6,27 @@ Handles AI request processing.
 from prompts.form_prompt import build_form_prompt
 from utils.json_validator import validate_response
 
+
+def extract_information(text):
+    extracted_data = {}
+
+    if "honda" in text:
+        extracted_data["vehicle"] = "Honda"
+
+    if "toyota" in text:
+        extracted_data["vehicle"] = "Toyota"
+
+    if "deer" in text:
+        extracted_data["incidentType"] = "Animal Collision"
+
+    if "windshield" in text:
+        extracted_data["damage"] = "Windshield"
+
+    if "nh48" in text:
+        extracted_data["road"] = "NH48"
+
+    return extracted_data
+
 def autofill_fields(fields, extracted_data):
     for field in fields:
         label = field["label"].lower()
@@ -28,23 +49,7 @@ def autofill_fields(fields, extracted_data):
 def generate_form(user_input):
     prompt = build_form_prompt(user_input)
     text = user_input.lower()
-    extracted_data = {}
-
-
-    if "honda" in text:
-       extracted_data["vehicle"] = "Honda"
-
-    if "toyota" in text:
-       extracted_data["vehicle"] = "Toyota"
-
-    if "deer" in text:
-       extracted_data["incidentType"] = "Animal Collision"
-
-    if "windshield" in text:
-       extracted_data["damage"] = "Windshield"
-
-    if "nh48" in text:
-       extracted_data["road"] = "NH48"
+    extracted_data = extract_information(text)
 
     if "student" in text:
         response = {
