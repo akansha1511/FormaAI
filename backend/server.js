@@ -1,3 +1,4 @@
+// backend/src/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -52,7 +53,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static files (for uploads)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
@@ -173,10 +174,10 @@ const server = app.listen(PORT, () => {
 ║   🚀 Forma AI Backend Server Started                                      ║
 ║                                                                           ║
 ║   📡 Port:          ${PORT}                                                  ║
-║   🌍 Environment:   ${process.env.NODE_ENV || 'development'}                  ║
-║   📍 API URL:       http://localhost:${PORT}/api                           ║
-║   📊 Database:      ${mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Disconnected'} ║
-║   🔗 Client:        ${process.env.CLIENT_URL || 'http://localhost:5173'}   ║
+║   🌍 Environment:   ${process.env.NODE_ENV || 'development'}                                           ║
+║   📍 API URL:       http://localhost:${PORT}/api                             ║
+║   📊 Database:      ${mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Disconnected'}                                       ║
+║   🔗 Client:        ${process.env.CLIENT_URL || 'http://localhost:5173'}                                 ║
 ║                                                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
     `);
