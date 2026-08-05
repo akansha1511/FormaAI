@@ -12,12 +12,26 @@ const generalLimiter = rateLimit({
 
 // Auth rate limiter (stricter)
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5,
     message: {
         success: false,
-        message: 'Too many login attempts. Try again after 15 minutes.'
+        message: 'Too many authentication attempts. Please try again after 15 minutes.'
     }
 });
 
-module.exports = { generalLimiter, authLimiter };
+// AI rate limiter
+const aiLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 20,
+    message: {
+        success: false,
+        message: 'AI extraction limit exceeded. Please try again after an hour.'
+    }
+});
+
+module.exports = {
+    generalLimiter,
+    authLimiter,
+    aiLimiter
+};
