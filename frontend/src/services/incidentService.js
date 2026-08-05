@@ -5,9 +5,6 @@ import { formatErrorMessage } from '../utils/errorHandler';
 import { buildQueryString } from '../utils/apiHelpers';
 
 export const incidentService = {
-    /**
-     * Create incident
-     */
     create: async (data) => {
         try {
             const sanitizedData = {
@@ -26,9 +23,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Get all incidents with filters
-     */
     getAll: async (params = {}) => {
         try {
             const queryString = buildQueryString(params);
@@ -39,9 +33,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Get single incident
-     */
     getOne: async (id) => {
         try {
             if (!id) throw new Error('Incident ID is required');
@@ -52,9 +43,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Update incident
-     */
     update: async (id, data) => {
         try {
             const sanitizedData = {
@@ -68,9 +56,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Delete incident
-     */
     delete: async (id) => {
         try {
             const response = await api.delete(`${API_ENDPOINTS.INCIDENTS.BASE}/${id}`);
@@ -80,15 +65,13 @@ export const incidentService = {
         }
     },
 
-    /**
-     * AI Extraction
-     */
     extract: async (description) => {
         try {
             const sanitizedDescription = sanitizeInput(description);
             if (!sanitizedDescription) {
                 throw new Error('Description is required');
             }
+            // ✅ Check if API_ENDPOINTS.INCIDENTS.EXTRACT is correct
             const response = await api.post(API_ENDPOINTS.INCIDENTS.EXTRACT, { 
                 description: sanitizedDescription 
             });
@@ -98,9 +81,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Add comment
-     */
     addComment: async (id, text) => {
         try {
             const sanitizedText = sanitizeInput(text);
@@ -115,9 +95,6 @@ export const incidentService = {
         }
     },
 
-    /**
-     * Get incident statistics
-     */
     getStats: async () => {
         try {
             const response = await api.get(API_ENDPOINTS.INCIDENTS.STATS);
