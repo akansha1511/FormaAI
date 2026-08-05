@@ -1,117 +1,89 @@
 import api from './api';
+import { API_ENDPOINTS } from '../utils/constants';
+import { sanitizeInput } from '../utils/validators';
+import { formatErrorMessage } from '../utils/errorHandler';
 
 export const formService = {
-    /**
-     * Create a new form
-     * @param {Object} data - Form configuration
-     * @returns {Promise} - { success, data }
-     */
     create: async (data) => {
         try {
-            const response = await api.post('/forms', data);
+            const sanitizedData = {
+                ...data,
+                title: sanitizeInput(data.title),
+                description: sanitizeInput(data.description)
+            };
+            const response = await api.post(API_ENDPOINTS.FORMS.BASE, sanitizedData);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to create form' };
+            throw new Error(formatErrorMessage(error, 'Failed to create form'));
         }
     },
 
-    /**
-     * Get all forms
-     * @param {Object} params - { status, search, page, limit }
-     * @returns {Promise} - { success, data, pagination }
-     */
     getAll: async (params = {}) => {
         try {
-            const response = await api.get('/forms', { params });
+            const response = await api.get(API_ENDPOINTS.FORMS.BASE, { params });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to load forms' };
+            throw new Error(formatErrorMessage(error, 'Failed to load forms'));
         }
     },
 
-    /**
-     * Get single form by ID
-     * @param {string} id - Form ID
-     * @returns {Promise} - { success, data }
-     */
     getOne: async (id) => {
         try {
-            const response = await api.get(`/forms/${id}`);
+            if (!id) throw new Error('Form ID is required');
+            const response = await api.get(`${API_ENDPOINTS.FORMS.BASE}/${id}`);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Form not found' };
+            throw new Error(formatErrorMessage(error, 'Form not found'));
         }
     },
 
-    /**
-     * Update form
-     * @param {string} id - Form ID
-     * @param {Object} data - Updated form data
-     * @returns {Promise} - { success, data }
-     */
     update: async (id, data) => {
         try {
-            const response = await api.put(`/forms/${id}`, data);
+            const sanitizedData = {
+                ...data,
+                title: sanitizeInput(data.title),
+                description: sanitizeInput(data.description)
+            };
+            const response = await api.put(`${API_ENDPOINTS.FORMS.BASE}/${id}`, sanitizedData);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to update form' };
+            throw new Error(formatErrorMessage(error, 'Failed to update form'));
         }
     },
 
-    /**
-     * Delete form
-     * @param {string} id - Form ID
-     * @returns {Promise} - { success, message }
-     */
     delete: async (id) => {
         try {
-            const response = await api.delete(`/forms/${id}`);
+            const response = await api.delete(`${API_ENDPOINTS.FORMS.BASE}/${id}`);
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to delete form' };
+            throw new Error(formatErrorMessage(error, 'Failed to delete form'));
         }
     },
 
-    /**
-     * Submit form response
-     * @param {string} id - Form ID
-     * @param {Object} data - Form submission data
-     * @returns {Promise} - { success, data }
-     */
     submit: async (id, data) => {
         try {
-            const response = await api.post(`/forms/${id}/submit`, { data });
+            const response = await api.post(API_ENDPOINTS.FORMS.SUBMIT(id), { data });
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to submit form' };
+            throw new Error(formatErrorMessage(error, 'Failed to submit form'));
         }
     },
 
-    /**
-     * Get form submissions
-     * @param {string} id - Form ID
-     * @returns {Promise} - { success, data }
-     */
     getSubmissions: async (id) => {
         try {
-            const response = await api.get(`/forms/${id}/submissions`);
+            const response = await api.get(API_ENDPOINTS.FORMS.SUBMISSIONS(id));
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to get submissions' };
+            throw new Error(formatErrorMessage(error, 'Failed to get submissions'));
         }
     },
 
-    /**
-     * Get form schema
-     * @param {string} id - Form ID
-     * @returns {Promise} - { success, data }
-     */
     getSchema: async (id) => {
         try {
-            const response = await api.get(`/forms/${id}/schema`);
+            const response = await api.get(API_ENDPOINTS.FORMS.SCHEMA(id));
             return response.data;
         } catch (error) {
-            throw error.response?.data || { success: false, message: 'Failed to get form schema' };
+            throw new Error(formatErrorMessage(error, 'Failed to get form schema'));
         }
     }
 };
