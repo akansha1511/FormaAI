@@ -18,13 +18,14 @@
 - AI service implementation
 - JSON response validator
 - Dynamic form generation based on prompt keywords
-- Python requirements file
+- Backend (Node.js) integration
 - Local API testing completed
+- Added placeholder support for generated form fields
+- Python requirements file
 
 ### In Progress
 
-- AI model integration
-- Backend (Node.js) integration
+- AI model (LLM) integration
 - Frontend integration
 - End-to-end testing
 
@@ -35,6 +36,7 @@
 - Improve validation rules
 - Support additional field properties
 - Performance optimization
+
 
 ## project structure
 
@@ -81,9 +83,6 @@ Request:
 }
 ```
 
-Current Response Example:
-
-```json
 {
   "success": true,
   "title": "Student Registration Form",
@@ -91,7 +90,20 @@ Current Response Example:
     {
       "label": "Student Name",
       "type": "text",
-      "required": true
+      "required": true,
+      "placeholder": "Enter student name"
+    },
+    {
+      "label": "Roll Number",
+      "type": "text",
+      "required": true,
+      "placeholder": "Enter roll number"
+    },
+    {
+      "label": "Department",
+      "type": "text",
+      "required": true,
+      "placeholder": "Enter department"
     }
   ]
 }
