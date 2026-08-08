@@ -1,6 +1,6 @@
 // src/context/FormContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
-
+import api from "../services/api";
 // Create the context
 const FormContext = createContext();
 
@@ -181,11 +181,19 @@ export const FormProvider = ({ children }) => {
     const fields = formConfig?.sections?.flatMap(s => s.fields) || [];
 
     fields.forEach(field => {
-      const value = data[field.id];
-      if (field.required && !value) {
+    const value = data[field.id];
+
+    if (
+        field.required &&
+        (
+            value === undefined ||
+            value === null ||
+            (typeof value === 'string' && value.trim() === '')
+        )
+    ) {
         newErrors[field.id] = `${field.label} is required`;
-      }
-    });
+    }
+});
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
