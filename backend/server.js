@@ -10,7 +10,7 @@ const path = require('path');
 // Load environment variables
 dotenv.config();
 
-// Import database
+// Import config
 const connectDB = require('./config/database');
 
 // Import middleware
@@ -19,7 +19,7 @@ const { generalLimiter, authLimiter } = require('./middleware/rateLimiter');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
-const aiRoutes = require('./routes/aiRoutes');
+const incidentRoutes = require('./routes/incidentRoutes');
 const formRoutes = require('./routes/formRoutes');
 const responseRoutes = require('./routes/responseRoutes');
 const templateRoutes = require('./routes/templateRoutes');
@@ -27,7 +27,9 @@ const templateRoutes = require('./routes/templateRoutes');
 // Initialize express
 const app = express();
 
-// ============ MIDDLEWARE ============
+// ================================================================
+//  MIDDLEWARE
+// ================================================================
 
 // Security headers
 app.use(helmet({
@@ -50,21 +52,25 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files
+// Static files (for uploads)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
+} else {
+    app.use(morgan('combined'));
 }
 
 // Rate limiting
 app.use('/api', generalLimiter);
 app.use('/api/auth', authLimiter);
 
-// ============ ROUTES ============
+// ================================================================
+//  ROUTES
+// ================================================================
 
-// Health check - shows current connection status
+// Health check
 app.get('/health', (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
     res.status(200).json({
@@ -75,7 +81,6 @@ app.get('/health', (req, res) => {
         uptime: process.uptime(),
         environment: process.env.NODE_ENV || 'development',
         mongodb: isConnected ? 'Connected' : 'Disconnected',
-        readyState: mongoose.connection.readyState,
         database: mongoose.connection.name || 'N/A'
     });
 });
@@ -91,21 +96,23 @@ app.get('/', (req, res) => {
         endpoints: {
             auth: '/api/auth',
             ai: '/api/ai',
-            forms: '/api/forms',
-            responses: '/api/responses',
-            templates: '/api/templates'
+            incidents: '/api/incidents',
+            forms: '/api/forms'
         }
     });
 });
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/ai', aiRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/ai', incidentRoutes);
 app.use('/api/forms', formRoutes);
 app.use('/api/responses', responseRoutes);
 app.use('/api/templates', templateRoutes);
 
-// ============ ERROR HANDLING ============
+// ================================================================
+//  ERROR HANDLING
+// ================================================================
 
 // 404 Not Found
 app.use((req, res) => {
@@ -118,17 +125,19 @@ app.use((req, res) => {
 // Global error handler
 app.use(errorHandler);
 
-// ============ START SERVER ============
+// ================================================================
+//  START SERVER
+// ================================================================
 
 const PORT = process.env.PORT || 5000;
 
-//  Connect to MongoDB first, then start server
+// ✅ START SERVER AFTER DATABASE CONNECTION
 const startServer = async () => {
     try {
-        // Connect to MongoDB
+        // Connect to database first
         await connectDB();
         
-        // Start server
+        // Then start the server
         const server = app.listen(PORT, () => {
             const isConnected = mongoose.connection.readyState === 1;
             console.log(`
@@ -143,12 +152,19 @@ const startServer = async () => {
 ║   📁 Database Name: ${mongoose.connection.name || 'N/A'}                                              ║
 ║   🔗 Client:        ${process.env.CLIENT_URL || 'http://localhost:5173'}                                 ║
 ║                                                                           ║
+║   📋 Endpoints:                                                           ║
+║   - GET  /health                      Health check                        ║
+║   - POST /api/auth/register           Register user                       ║
+║   - POST /api/auth/login              Login user                          ║
+║   - POST /api/ai/extract              AI extraction                       ║
+║   - POST /api/ai/generate             AI form generation                  ║
+║   - GET  /api/incidents               Get all incidents                   ║
+║                                                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
             `);
         });
 
-        // ============ GRACEFUL SHUTDOWN ============
-
+        // Graceful shutdown
         process.on('unhandledRejection', (err) => {
             console.error('❌ Unhandled Rejection:', err.message);
             server.close(() => process.exit(1));
@@ -185,7 +201,7 @@ const startServer = async () => {
     }
 };
 
-// Call the start function
+//  Call the start function
 startServer();
 
 module.exports = app;
