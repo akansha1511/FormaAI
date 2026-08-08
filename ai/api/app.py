@@ -1,17 +1,16 @@
 import os
 import sys
 from datetime import datetime
-
-# Add parent directory to path for imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-# ✅ Correct imports from ai_service.py
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Import from ai_service
 from services.ai_service import (
+    extract_incident_data,
     generate_form,
-    extract_information,
+    analyze_incident,
     autofill_fields,
     detect_form_type,
     get_form_fields
@@ -21,13 +20,14 @@ app = Flask(__name__)
 CORS(app)
 
 # ================================================================
-#  HEALTH & STATUS ENDPOINTS
+#  ENDPOINTS
 # ================================================================
 
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
         "service": "FormaAI Python Service",
+        "provider": "Gemini",
         "version": "1.0.0",
         "status": "running",
         "endpoints": {
@@ -44,138 +44,76 @@ def health():
     return jsonify({
         "status": "healthy",
         "service": "FormaAI Python AI Service",
+        "provider": "Gemini",
         "timestamp": datetime.now().isoformat()
     })
 
-# ================================================================
-#  GENERATE FORM ENDPOINT
-# ================================================================
-
-@app.route("/api/ai/generate", methods=["POST"])
-def generate():
-    """
-    Generate form from user prompt
-    """
-    try:
-        data = request.get_json()
-        
-        if not data or "prompt" not in data:
-            return jsonify({
-                "success": False,
-                "message": "Prompt is required."
-            }), 400
-
-        user_prompt = data["prompt"]
-        response = generate_form(user_prompt)
-        return jsonify(response)
-        
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "message": str(e)
-        }), 500
-
-# ================================================================
-#  EXTRACT DATA ENDPOINT
-# ================================================================
-
 @app.route("/api/ai/extract", methods=["POST"])
 def extract():
-    """
-    Extract structured data from incident description
-    """
     try:
         data = request.get_json()
-        
         if not data or "description" not in data:
             return jsonify({
                 "success": False,
                 "message": "Description is required."
             }), 400
 
-        description = data["description"]
-        result = extract_information(description)
-        
+        result = extract_incident_data(data["description"])
         return jsonify({
             "success": True,
             "data": result,
             "message": "Extraction successful"
         })
-        
     except Exception as e:
         return jsonify({
             "success": False,
             "message": str(e)
         }), 500
 
-# ================================================================
-#  ANALYZE INCIDENT ENDPOINT
-# ================================================================
+@app.route("/api/ai/generate", methods=["POST"])
+def generate():
+    try:
+        data = request.get_json()
+        if not data or "prompt" not in data:
+            return jsonify({
+                "success": False,
+                "message": "Prompt is required."
+            }), 400
+
+        result = generate_form(data["prompt"])
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
 
 @app.route("/api/ai/analyze", methods=["POST"])
 def analyze():
-    """
-    Analyze incident data and provide insights
-    """
     try:
         data = request.get_json()
-        
         if not data or "incident_data" not in data:
             return jsonify({
                 "success": False,
                 "message": "Incident data is required."
             }), 400
 
-        incident_data = data["incident_data"]
-        
-        # Simple analysis logic
-        analysis = {
-            "summary": "Incident analyzed successfully",
-            "riskLevel": "Medium",
-            "suggestedActions": ["Review documentation", "Contact insurance"],
-            "analysisDetails": {}
-        }
-        
-        # Analyze severity
-        severity = incident_data.get("severity", "").lower()
-        if severity == "critical":
-            analysis["riskLevel"] = "Critical"
-            analysis["suggestedActions"].extend([
-                "Immediate legal counsel recommended",
-                "Notify insurance immediately",
-                "Document all evidence"
-            ])
-        elif severity == "high":
-            analysis["riskLevel"] = "High"
-            analysis["suggestedActions"].extend([
-                "Contact insurance provider",
-                "Gather supporting documents"
-            ])
-        
+        result = analyze_incident(data["incident_data"])
         return jsonify({
             "success": True,
-            "data": analysis,
+            "data": result,
             "message": "Analysis complete"
         })
-        
     except Exception as e:
         return jsonify({
             "success": False,
             "message": str(e)
         }), 500
 
-# ================================================================
-#  GENERATE FORM FROM EXTRACTED DATA
-# ================================================================
-
 @app.route("/api/ai/generate-form", methods=["POST"])
 def generate_form_from_data():
-    """
-    Generate dynamic form from extracted data
-    """
     try:
         data = request.get_json()
-        
         if not data or "extracted_data" not in data:
             return jsonify({
                 "success": False,
@@ -185,7 +123,6 @@ def generate_form_from_data():
         extracted_data = data["extracted_data"]
         form_type = data.get("form_type", "incident")
         
-        # Generate form fields
         fields = get_form_fields(form_type)
         fields = autofill_fields(fields, extracted_data)
         
@@ -198,42 +135,25 @@ def generate_form_from_data():
             },
             "message": "Form generated successfully"
         })
-        
     except Exception as e:
         return jsonify({
             "success": False,
             "message": str(e)
         }), 500
 
-# ================================================================
-#  ERROR HANDLERS
-# ================================================================
-
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
         "success": False,
-        "message": "Endpoint not found. Please check the URL.",
-        "available_endpoints": [
-            "/",
-            "/health",
-            "/api/ai/generate",
-            "/api/ai/extract",
-            "/api/ai/analyze",
-            "/api/ai/generate-form"
-        ]
+        "message": "Endpoint not found"
     }), 404
 
 @app.errorhandler(500)
 def server_error(error):
     return jsonify({
         "success": False,
-        "message": "Internal server error. Please try again later."
+        "message": "Internal server error"
     }), 500
-
-# ================================================================
-#  RUN SERVER
-# ================================================================
 
 if __name__ == "__main__":
     port = int(os.getenv("AI_SERVICE_PORT", 5001))
@@ -242,17 +162,18 @@ if __name__ == "__main__":
     print(f"""
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║   🤖 FormaAI AI Service Started                               ║
+║   🤖 FormaAI AI Service (Gemini)                              ║
 ║                                                               ║
 ║   📡 Port:          {port}                                      ║
 ║   📍 URL:           http://localhost:{port}                     ║
 ║   🔧 Debug Mode:    {debug}                                      ║
+║   🤖 AI Provider:   Gemini                                    ║
 ║                                                               ║
 ║   📋 Endpoints:                                               ║
 ║   - GET  /                        Service info                ║
 ║   - GET  /health                  Health check                ║
-║   - POST /api/ai/generate         Generate form               ║
 ║   - POST /api/ai/extract          Extract data                ║
+║   - POST /api/ai/generate         Generate form               ║
 ║   - POST /api/ai/analyze          Analyze incident            ║
 ║   - POST /api/ai/generate-form    Generate from extracted     ║
 ║                                                               ║
