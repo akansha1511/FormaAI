@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiSend, FiTrash2, FiZap, FiClock, FiCheckCircle, FiAlertCircle, FiInfo } from 'react-icons/fi';
 import { useForm } from '../context/FormContext';
-import { aiService } from '../services'; // ✅ Import AI service
+import { aiService } from '../services'; 
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Loader from '../components/Loader';
@@ -17,7 +17,7 @@ const AIInput = () => {
     const { setExtractedData, generateFormConfig } = useForm();
     const navigate = useNavigate();
 
-    // ✅ Handle Generate - Calls Backend AI
+    //  Handle Generate - Calls Backend AI
     const handleGenerate = async () => {
         if (!inputText.trim()) {
             toast.warning('Please describe your incident first');
@@ -42,11 +42,11 @@ const AIInput = () => {
                 setProgress(step.progress);
             }
 
-            // ✅ Call Backend AI Service
+            //  Call Backend AI Service
             const response = await aiService.extract(inputText);
 
             if (response.success) {
-                // ✅ Save extracted data
+                //  Save extracted data
                 const extractedData = response.data;
                 setExtractedData(extractedData);
                 generateFormConfig(extractedData);
