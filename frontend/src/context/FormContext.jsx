@@ -167,14 +167,15 @@ export const FormProvider = ({ children }) => {
       setFormStatus('submitted');
 
       return { success: true, form: savedForm };
-    } catch (error) {
-      setFormStatus('error');
-      return { success: false, error: error.message };
-    } finally {
-      setIsLoading(false);
-    }
-  };
+} catch (error) {
+    console.error('Form submission failed:', error);
+    setFormStatus('error');
 
+    return {
+        success: false,
+        error: error.message || 'Unable to submit form. Please try again.'
+    };
+}
   // Validate form
   const validateForm = (data = formData) => {
     const newErrors = {};
