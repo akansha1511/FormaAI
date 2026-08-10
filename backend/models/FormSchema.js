@@ -24,7 +24,11 @@ const showIfSchema = new mongoose.Schema({
 
 const fieldSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true }, // e.g. "string", "enum", "number", "date"
+  type: { 
+    type: String, 
+    required: true,
+    enum: ["string", "number", "boolean", "date", "enum", "file", "checkbox"]
+  }, // Restricted to valid form input types
   label: String,
   required: { type: Boolean, default: false },
   enum: [String],
