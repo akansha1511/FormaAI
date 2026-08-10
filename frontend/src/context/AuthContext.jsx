@@ -1,156 +1,115 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import api from "../services/api";
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authService } from '../services/authService';
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-
-  return context;
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within AuthProvider');
+    }
+    return context;
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Load user from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            loadUser();
+        } else {
+            setLoading(false);
+        }
+    }, []);
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  // ======================
-  // LOGIN
-  // ======================
-  const login = async (email, password) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await api.post("/api/auth/login", {
-        email,
-        password,
-      });
-
-      const { token, user } = res.data;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      setUser(user);
-
-      return {
-        success: true,
-        user,
-      };
-    } catch (err) {
-      const message =
-        err.response?.data?.message || "Login Failed";
-
-      setError(message);
-
-      return {
-        success: false,
-        error: message,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ======================
-  // REGISTER
-  // ======================
-  const register = async (name, email, password) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await api.post("/api/auth/register", {
-        name,
-        email,
-        password,
-      });
-
-      const user = res.data.user;
-
-      localStorage.setItem("user", JSON.stringify(user));
-
-      setUser(user);
-
-      return {
-        success: true,
-        user,
-      };
-    } catch (err) {
-      const message =
-        err.response?.data?.message || "Registration Failed";
-
-      setError(message);
-
-      return {
-        success: false,
-        error: message,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ======================
-  // LOGOUT
-  // ======================
-  const logout = () => {
-  setUser(null);
-  localStorage.removeItem('user');
-  localStorage.removeItem('token');
-  localStorage.removeItem('formDraft');
-  setError(null);
-};
-
-  // ======================
-  // CLEAR ERROR
-  // ======================
-  const clearError = () => {
-    setError(null);
-  };
-
-  // ======================
-  // RESET PASSWORD
-  // (Placeholder)
-  // ======================
-  const resetPassword = async () => {
-    return {
-      success: false,
-      error: "Reset password not implemented yet",
+    const loadUser = async () => {
+        try {
+            const response = await authService.getMe();
+            setUser(response.user);
+            setIsAuthenticated(true);
+        } catch (error) {
+            console.error('Error loading user:', error);
+            localStorage.removeItem('token');
+            setUser(null);
+            setIsAuthenticated(false);
+        } finally {
+            setLoading(false);
+        }
     };
-  };
 
-  const value = {
-    user,
-    loading,
-    error,
-    login,
-    register,
-    logout,
-    clearError,
-    resetPassword,
-    isAuthenticated: !!user,
-  };
+    const login = async (email, password) => {
+        setLoading(true);
+        try {
+            const response = await authService.login({ email, password });
+            const { token, user } = response;
+            
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            setUser(user);
+            setIsAuthenticated(true);
+            toast.success('Welcome back! 🎉');
+            return { success: true, user };
+        } catch (error) {
+            const message = error.message || 'Login failed';
+            toast.error(message);
+            return { success: false, error: message };
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const register = async (name, email, password) => {
+        setLoading(true);
+        try {
+            const response = await authService.register({ name, email, password });
+            const { token, user } = response;
+            
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            setUser(user);
+            setIsAuthenticated(true);
+            toast.success('Account created successfully! 🎉');
+            return { success: true, user };
+        } catch (error) {
+            const message = error.message || 'Registration failed';
+            toast.error(message);
+            return { success: false, error: message };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsAuthenticated(false);
+        toast.info('Logged out successfully');
+    };
+
+    const value = {
+        user,
+        loading,
+        isAuthenticated,
+        login,
+        register,
+        logout,
+        loadUser,
+        updateProfile: async (data) => { /* ... */ },
+        updateSettings: async (data) => { /* ... */ }
+    };
+
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthContext;
