@@ -37,10 +37,18 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Success Response
+    //  Generate Token on Register
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    //  Send Token with Response
     res.status(201).json({
       success: true,
       message: "User Registered Successfully",
+      token,  
       user: {
         id: user._id,
         name: user.name,
@@ -50,7 +58,6 @@ const registerUser = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -93,18 +100,18 @@ const loginUser = async (req, res) => {
       });
     }
 
-    // Generate JWT Token
+    //  Generate JWT Token
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Success Response
+    //  Send Token with Response
     res.status(200).json({
       success: true,
       message: "Login Successful",
-      token,
+      token,  
       user: {
         id: user._id,
         name: user.name,
@@ -114,7 +121,24 @@ const loginUser = async (req, res) => {
 
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
 
+// ==========================
+// Get Current User
+// ==========================
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: "Server Error",
@@ -128,4 +152,5 @@ const loginUser = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  getMe,
 };
