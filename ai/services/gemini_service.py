@@ -1,9 +1,10 @@
+# ai/services/gemini_service.py
 import os
 import json
 import re
 from datetime import datetime
 
-#  Try to import Gemini, fallback if not available
+# Try to import Gemini, fallback if not available
 try:
     import google.generativeai as genai  # type: ignore
     GEMINI_AVAILABLE = True
@@ -11,14 +12,15 @@ except ImportError:
     print("⚠️ google-generativeai not installed. Using fallback extraction.")
     GEMINI_AVAILABLE = False
 
-#  Import config - handle both ways
+# Import config - handle both ways
 try:
     from config.ai_config import config
 except ImportError:
     # Fallback config
     class Config:
         GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-        GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-pro")
+        # ✅ CORRECT: Use 'models/' prefix with gemini-1.5-flash
+        GEMINI_MODEL = os.getenv("GEMINI_MODEL", "models/gemini-1.5-flash")
         GEMINI_GENERATION_CONFIG = {
             "temperature": 0.3,
             "top_p": 0.95,
