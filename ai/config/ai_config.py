@@ -1,14 +1,14 @@
 import os
 
-#  Use os.getenv directly
 class AIConfig:
     # Provider
     AI_PROVIDER = os.getenv("AI_PROVIDER", "gemini")
     
     # Gemini Config
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "your_gemini_api_key_here")
-    GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-pro")
-    GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "gemini-1.5-flash")
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    # ✅ CORRECT: Use 'models/' prefix
+    GEMINI_MODEL = os.getenv("GEMINI_MODEL", "models/gemini-1.5-flash")
+    GEMINI_MODEL_FAST = os.getenv("GEMINI_MODEL_FAST", "models/gemini-1.5-flash")
     
     # Generation Config
     GEMINI_GENERATION_CONFIG = {
@@ -25,10 +25,6 @@ class AIConfig:
         {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
         {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
     ]
-    
-    # OpenAI Config (Fallback)
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
     
     # Common
     TIMEOUT = int(os.getenv("TIMEOUT", 30))
