@@ -109,13 +109,12 @@ export const AuthProvider = ({ children }) => {
   // LOGOUT
   // ======================
   const logout = () => {
-    setUser(null);
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-    setError(null);
-  };
+  setUser(null);
+  localStorage.removeItem('user');
+  localStorage.removeItem('token');
+  localStorage.removeItem('formDraft');
+  setError(null);
+};
 
   // ======================
   // CLEAR ERROR
