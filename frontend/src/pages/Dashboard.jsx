@@ -9,7 +9,8 @@ import {
     FiAlertCircle,
     FiArrowRight,
     FiTrendingUp,
-    FiCalendar
+    FiCalendar,
+    FiRefreshCw
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
@@ -17,6 +18,7 @@ import Card from '../components/Card';
 
 const Dashboard = () => {
     const { user } = useAuth();
+
     const [recentForms, setRecentForms] = useState([]);
     const [stats, setStats] = useState({
         total: 0,
@@ -25,8 +27,8 @@ const Dashboard = () => {
         drafts: 0
     });
 
-    useEffect(() => {
-        // Load forms from localStorage
+    // Load dashboard data
+    const loadDashboardData = () => {
         const allForms = JSON.parse(
             localStorage.getItem('allForms') || '[]'
         );
@@ -37,22 +39,26 @@ const Dashboard = () => {
 
         setStats({
             total: userForms.length,
+
             completed: userForms.filter(
                 f => f.status === 'Completed'
             ).length,
+
             inProgress: userForms.filter(
                 f => f.status === 'In Progress'
             ).length,
+
             drafts: userForms.filter(
                 f => f.status === 'Draft'
             ).length,
         });
 
-        // Sort by date - NEWEST FIRST
+        // Sort newest first
         const sorted = [...userForms].sort((a, b) => {
             const dateA = new Date(
                 a.submittedAt || a.date || 0
             );
+
             const dateB = new Date(
                 b.submittedAt || b.date || 0
             );
@@ -60,10 +66,19 @@ const Dashboard = () => {
             return dateB - dateA;
         });
 
-        // Get recent forms (last 5)
+        // Show latest 5 forms
         setRecentForms(sorted.slice(0, 5));
+    };
 
+    // Load forms when dashboard opens
+    useEffect(() => {
+        loadDashboardData();
     }, [user]);
+
+    // Refresh dashboard
+    const refreshDashboard = () => {
+        loadDashboardData();
+    };
 
     // Format date and time
     const formatDateTime = (dateStr) => {
@@ -72,11 +87,18 @@ const Dashboard = () => {
         try {
             const date = new Date(dateStr);
 
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(
+                date.getDate()
+            ).padStart(2, '0');
+
+            const month = String(
+                date.getMonth() + 1
+            ).padStart(2, '0');
+
             const year = date.getFullYear();
 
             let hours = date.getHours();
+
             const minutes = String(
                 date.getMinutes()
             ).padStart(2, '0');
@@ -123,7 +145,8 @@ const Dashboard = () => {
     return (
         <div className="space-y-6">
 
-            {/* Welcome Section */}
+            {/* ================= WELCOME SECTION ================= */}
+
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
 
                 <div>
@@ -154,10 +177,13 @@ const Dashboard = () => {
 
             </div>
 
-            {/* Stats Cards */}
+
+            {/* ================= STATS CARDS ================= */}
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 {statCards.map((stat, index) => (
+
                     <motion.div
                         key={index}
                         initial={{
@@ -174,9 +200,11 @@ const Dashboard = () => {
                         }}
                         className="card"
                     >
+
                         <div className="flex items-center justify-between">
 
                             <div>
+
                                 <p className="text-sm text-gray-500">
                                     {stat.label}
                                 </p>
@@ -184,6 +212,7 @@ const Dashboard = () => {
                                 <p className="text-2xl font-bold text-gray-900 mt-1">
                                     {stat.value}
                                 </p>
+
                             </div>
 
                             <div
@@ -193,19 +222,26 @@ const Dashboard = () => {
                             </div>
 
                         </div>
+
                     </motion.div>
+
                 ))}
 
             </div>
 
-            {/* Quick Actions */}
+
+            {/* ================= QUICK ACTIONS ================= */}
+
             <div className="grid md:grid-cols-2 gap-4">
+
+                {/* New Form */}
 
                 <div className="quick-action">
 
                     <div className="flex items-start justify-between">
 
                         <div>
+
                             <h3 className="font-semibold text-gray-900">
                                 Quick Actions
                             </h3>
@@ -225,21 +261,28 @@ const Dashboard = () => {
                                     New Form
                                 </Button>
                             </Link>
+
                         </div>
 
                         <div className="p-3 bg-linear-to-br from-blue-600 to-cyan-400 rounded-xl">
+
                             <FiPlus className="w-6 h-6 text-white" />
+
                         </div>
 
                     </div>
 
                 </div>
 
+
+                {/* AI Assistant */}
+
                 <div className="quick-action">
 
                     <div className="flex items-start justify-between">
 
                         <div>
+
                             <h3 className="font-semibold text-gray-900">
                                 AI Assistant
                             </h3>
@@ -252,6 +295,7 @@ const Dashboard = () => {
                                 to="/ai-input"
                                 className="mt-4 inline-block"
                             >
+
                                 <Button
                                     variant="secondary"
                                     size="sm"
@@ -259,11 +303,15 @@ const Dashboard = () => {
                                     Try AI Assistant
                                     <FiArrowRight className="ml-2" />
                                 </Button>
+
                             </Link>
+
                         </div>
 
                         <div className="p-3 bg-linear-to-br from-purple-600 to-pink-400 rounded-xl">
+
                             <FiTrendingUp className="w-6 h-6 text-white" />
+
                         </div>
 
                     </div>
@@ -272,7 +320,9 @@ const Dashboard = () => {
 
             </div>
 
-            {/* Recent Forms */}
+
+            {/* ================= RECENT FORMS ================= */}
+
             <div>
 
                 <div className="flex items-center justify-between mb-4">
@@ -281,16 +331,35 @@ const Dashboard = () => {
                         Recent Forms
                     </h2>
 
-                    <Link
-                        to="/forms"
-                        className="text-sm text-blue-600 hover:underline"
-                    >
-                        View All ({stats.total})
-                    </Link>
+                    <div className="flex items-center gap-3">
+
+                        {/* Refresh Button */}
+
+                        <button
+                            onClick={refreshDashboard}
+                            className="text-gray-500 hover:text-blue-600 transition"
+                            title="Refresh dashboard"
+                            aria-label="Refresh dashboard"
+                        >
+                            <FiRefreshCw className="w-4 h-4" />
+                        </button>
+
+                        {/* View All */}
+
+                        <Link
+                            to="/forms"
+                            className="text-sm text-blue-600 hover:underline"
+                        >
+                            View All ({stats.total})
+                        </Link>
+
+                    </div>
 
                 </div>
 
-                {/* Improved Empty State */}
+
+                {/* ================= EMPTY STATE ================= */}
+
                 {recentForms.length === 0 ? (
 
                     <div className="text-center py-12">
@@ -311,6 +380,7 @@ const Dashboard = () => {
                             to="/ai-input"
                             className="mt-4 inline-block"
                         >
+
                             <Button
                                 variant="primary"
                                 size="sm"
@@ -318,11 +388,14 @@ const Dashboard = () => {
                                 <FiPlus className="mr-2" />
                                 Create First Form
                             </Button>
+
                         </Link>
 
                     </div>
 
                 ) : (
+
+                    /* ================= FORM LIST ================= */
 
                     <div className="space-y-2">
 
@@ -332,6 +405,8 @@ const Dashboard = () => {
                                 key={form.id}
                                 className="recent-item flex items-center justify-between"
                             >
+
+                                {/* Form Information */}
 
                                 <div className="flex items-center space-x-3">
 
@@ -360,6 +435,9 @@ const Dashboard = () => {
                                     </div>
 
                                 </div>
+
+
+                                {/* Status + View */}
 
                                 <div className="flex items-center gap-3">
 
