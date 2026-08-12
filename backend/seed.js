@@ -17,6 +17,7 @@ const sampleSchema = {
       name: "vehicleBrand",
       type: "enum",
       label: "Vehicle Brand",
+      description: "Select the make of the vehicle involved in the incident",
       required: true,
       enum: ["Honda City", "Toyota Camry", "Ford Focus", "Other"],
     },
