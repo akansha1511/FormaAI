@@ -1,4 +1,3 @@
-// backend/src/services/aiService.js
 const axios = require("axios");
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:5001';
