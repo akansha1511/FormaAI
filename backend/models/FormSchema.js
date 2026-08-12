@@ -30,6 +30,7 @@ const fieldSchema = new mongoose.Schema({
     enum: ["string", "number", "boolean", "date", "enum", "file", "checkbox"]
   }, // Restricted to valid form input types
   label: String,
+  description: String, // Help text or description for the field
   required: { type: Boolean, default: false },
   enum: [String],
   validation: {
