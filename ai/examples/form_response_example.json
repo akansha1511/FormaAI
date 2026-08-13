@@ -1,213 +1,35 @@
 {
   "title": "Employee Registration Form",
   "description": "Form for onboarding new employees",
-  "version": "2.0.0",
-  "schema": "https://json-schema.org/draft-07/schema",
-  "createdAt": "2024-01-15T10:30:00.000Z",
-  "updatedAt": "2024-01-15T10:30:00.000Z",
-  "formType": "registration",
-  "steps": [
-    {
-      "id": "personal",
-      "title": "Personal Information",
-      "description": "Enter your personal details",
-      "fields": ["name", "email", "phone"]
-    },
-    {
-      "id": "professional",
-      "title": "Professional Details",
-      "description": "Enter your work information",
-      "fields": ["department", "designation", "employeeId"]
-    }
-  ],
   "fields": [
     {
-      "id": "name",
       "label": "Full Name",
       "type": "text",
       "required": true,
-      "placeholder": "Enter full name",
-      "validation": {
-        "minLength": 2,
-        "maxLength": 100,
-        "pattern": "^[a-zA-Z\\s]+$"
-      },
-      "errorMessages": {
-        "required": "Full name is required",
-        "minLength": "Name must be at least 2 characters",
-        "maxLength": "Name cannot exceed 100 characters",
-        "pattern": "Name can only contain letters and spaces"
-      },
-      "helpText": "Enter your legal name as per your ID",
-      "icon": "FiUser",
-      "order": 1
+      "placeholder": "Enter full name"
     },
     {
-      "id": "email",
-      "label": "Email Address",
+      "label": "Email",
       "type": "email",
       "required": true,
-      "placeholder": "Enter email address",
-      "validation": {
-        "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-      },
-      "errorMessages": {
-        "required": "Email address is required",
-        "pattern": "Please enter a valid email address"
-      },
-      "helpText": "We'll send verification to this email",
-      "icon": "FiMail",
-      "order": 2,
-      "autoComplete": "email"
+      "placeholder": "Enter email address"
     },
     {
-      "id": "phone",
       "label": "Phone Number",
       "type": "tel",
       "required": true,
-      "placeholder": "Enter phone number",
-      "validation": {
-        "pattern": "^\\+?[0-9]{10,15}$"
-      },
-      "errorMessages": {
-        "required": "Phone number is required",
-        "pattern": "Please enter a valid phone number"
-      },
-      "helpText": "Include country code if applicable",
-      "icon": "FiPhone",
-      "order": 3,
-      "autoComplete": "tel"
+      "placeholder": "Enter phone number"
     },
     {
-      "id": "department",
       "label": "Department",
       "type": "select",
-      "required": true,
       "options": [
-        { "value": "hr", "label": "HR" },
-        { "value": "engineering", "label": "Engineering" },
-        { "value": "finance", "label": "Finance" },
-        { "value": "marketing", "label": "Marketing" }
+        "HR",
+        "Engineering",
+        "Finance",
+        "Marketing"
       ],
-      "placeholder": "Select department",
-      "helpText": "Choose your primary department",
-      "icon": "FiBriefcase",
-      "order": 4,
-      "conditions": [
-        {
-          "field": "employeeId",
-          "operator": "startsWith",
-          "value": "EMP"
-        }
-      ]
-    },
-    {
-      "id": "designation",
-      "label": "Designation",
-      "type": "text",
-      "required": false,
-      "placeholder": "Enter your job title",
-      "helpText": "Your official designation",
-      "icon": "FiAward",
-      "order": 5,
-      "dependsOn": {
-        "field": "department",
-        "value": "engineering"
-      }
-    },
-    {
-      "id": "employeeId",
-      "label": "Employee ID",
-      "type": "text",
-      "required": true,
-      "placeholder": "Enter employee ID",
-      "validation": {
-        "pattern": "^EMP-[0-9]{4}$"
-      },
-      "errorMessages": {
-        "required": "Employee ID is required",
-        "pattern": "Employee ID must follow format: EMP-1234"
-      },
-      "helpText": "Format: EMP-XXXX (e.g., EMP-1234)",
-      "icon": "FiHash",
-      "order": 0,
-      "readonly": false
-    },
-    {
-      "id": "startDate",
-      "label": "Start Date",
-      "type": "date",
-      "required": true,
-      "validation": {
-        "min": "2024-01-01"
-      },
-      "errorMessages": {
-        "required": "Start date is required",
-        "min": "Start date must be after January 1, 2024"
-      },
-      "helpText": "Your first day at work",
-      "icon": "FiCalendar",
-      "order": 6
-    },
-    {
-      "id": "photo",
-      "label": "Profile Photo",
-      "type": "file",
-      "required": false,
-      "accept": "image/*",
-      "validation": {
-        "maxSize": 5242880,
-        "allowedTypes": ["image/jpeg", "image/png", "image/gif"]
-      },
-      "errorMessages": {
-        "maxSize": "Photo must be less than 5MB",
-        "allowedTypes": "Please upload JPEG, PNG, or GIF image"
-      },
-      "helpText": "Upload a recent passport-sized photo",
-      "icon": "FiCamera",
-      "order": 7
-    },
-    {
-      "id": "terms",
-      "label": "Accept Terms & Conditions",
-      "type": "checkbox",
-      "required": true,
-      "errorMessages": {
-        "required": "You must accept terms to proceed"
-      },
-      "helpText": "I agree to the terms and conditions",
-      "order": 8
-    },
-    {
-      "id": "comments",
-      "label": "Additional Comments",
-      "type": "textarea",
-      "required": false,
-      "placeholder": "Any additional information...",
-      "rows": 4,
-      "validation": {
-        "maxLength": 500
-      },
-      "errorMessages": {
-        "maxLength": "Comments cannot exceed 500 characters"
-      },
-      "helpText": "Optional - any other details you'd like to share",
-      "icon": "FiMessageSquare",
-      "order": 9
+      "required": true
     }
-  ],
-  "uiConfig": {
-    "theme": "modern",
-    "layout": "two-column",
-    "showProgress": true,
-    "showStepNumbers": true,
-    "submitLabel": "Register Employee",
-    "cancelLabel": "Cancel",
-    "saveDraftLabel": "Save as Draft"
-  },
-  "metadata": {
-    "totalFields": 10,
-    "requiredFields": 7,
-    "estimatedCompletionTime": 180
-  }
+  ]
 }
