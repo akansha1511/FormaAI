@@ -3,6 +3,28 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // ==========================
+// ✅ Generate Access Token (90 days)
+// ==========================
+const generateAccessToken = (id) => {
+    return jwt.sign(
+        { id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRE || '90d' }  // ← 90 days
+    );
+};
+
+// ==========================
+// ✅ Generate Refresh Token (180 days)
+// ==========================
+const generateRefreshToken = (id) => {
+    return jwt.sign(
+        { id },
+        process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET,
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRE || '180d' }
+    );
+};
+
+// ==========================
 // Register User
 // ==========================
 const registerUser = async (req, res) => {
@@ -31,16 +53,14 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
 
     res.status(201).json({
       success: true,
       message: "User Registered Successfully",
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user._id,
         name: user.name,
@@ -87,16 +107,15 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    // ✅ Generate 90-day tokens
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
 
     res.status(200).json({
       success: true,
       message: "Login Successful",
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user._id,
         name: user.name,
@@ -118,7 +137,6 @@ const loginUser = async (req, res) => {
 // ==========================
 const getMe = async (req, res) => {
   try {
-    // ✅ req.user is set by protect middleware
     const user = await User.findById(req.user.id).select('-password');
     
     if (!user) {
@@ -145,6 +163,46 @@ const getMe = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server Error",
+    });
+  }
+};
+
+// ==========================
+// ✅ Refresh Token
+// ==========================
+const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'Refresh token required'
+      });
+    }
+    
+    // Verify refresh token
+    const decoded = jwt.verify(
+      refreshToken, 
+      process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET
+    );
+    
+    // Generate new access token (90 days)
+    const newAccessToken = generateAccessToken(decoded.id);
+    
+    // Generate new refresh token (180 days)
+    const newRefreshToken = generateRefreshToken(decoded.id);
+    
+    res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    });
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Invalid refresh token'
     });
   }
 };
@@ -212,12 +270,48 @@ const updateSettings = async (req, res) => {
 };
 
 // ==========================
+// ✅ Check Token Status
+// ==========================
+const checkTokenStatus = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const expiryTime = decoded.exp * 1000;
+    const timeLeft = expiryTime - Date.now();
+    const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+    
+    res.status(200).json({
+      success: true,
+      valid: timeLeft > 0,
+      daysLeft: Math.max(0, daysLeft),
+      expiresAt: new Date(expiryTime).toISOString()
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      valid: false,
+      message: 'Invalid token'
+    });
+  }
+};
+
+// ==========================
 // Export Controllers
 // ==========================
 module.exports = {
   registerUser,
   loginUser,
   getMe,
+  refreshToken,
   updateProfile,
   updateSettings,
+  checkTokenStatus,
 };
