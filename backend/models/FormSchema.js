@@ -47,6 +47,8 @@ const formSchema = new mongoose.Schema(
     version: { type: Number, default: 1 },
     fields: [fieldSchema],
     rules: [ruleSchema],
+    // Allows admins to disable a form without deleting it
+    isActive: { type: Boolean, default: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
