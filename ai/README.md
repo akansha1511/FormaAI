@@ -121,8 +121,3 @@ Request:
 - Local Flask AI service is running on port `5001`.
 - Gemini API connectivity testing is in progress.
 - Fallback handling is available when Gemini is unavailable.
-## Gemini Testing Status
-
-- Gemini integration is currently under testing.
-- AI extraction and dynamic form generation are being verified.
-- Information extraction accuracy is being investigated.
