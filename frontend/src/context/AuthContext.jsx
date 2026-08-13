@@ -1,3 +1,4 @@
+// frontend/src/context/AuthContext.jsx
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authService } from '../services/authService';
 import { toast } from 'react-toastify';
@@ -19,15 +20,59 @@ export const AuthProvider = ({ children }) => {
 
     // ✅ Load user on mount
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            loadUser();
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            // Check if token is expired
+            if (isTokenExpired(accessToken)) {
+                console.log('⏰ Token expired, trying to refresh...');
+                refreshAccessToken();
+            } else {
+                loadUser();
+            }
         } else {
             setLoading(false);
         }
     }, []);
 
-    // ✅ Load user from backend
+    // ✅ Check if token is expired
+    const isTokenExpired = (token) => {
+        if (!token) return true;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const expiryTime = payload.exp * 1000;
+            const timeLeft = expiryTime - Date.now();
+            const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+            console.log(`⏳ Token expires in ${daysLeft} days`);
+            return timeLeft <= 0;
+        } catch (e) {
+            return true;
+        }
+    };
+
+    // ✅ Refresh access token
+    const refreshAccessToken = async () => {
+        try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken) {
+                throw new Error('No refresh token');
+            }
+            
+            const response = await authService.refreshToken(refreshToken);
+            if (response.success) {
+                localStorage.setItem('accessToken', response.accessToken);
+                localStorage.setItem('refreshToken', response.refreshToken);
+                console.log('✅ Token refreshed successfully!');
+                loadUser();
+            } else {
+                throw new Error('Refresh failed');
+            }
+        } catch (error) {
+            console.error('❌ Token refresh failed:', error);
+            logout();
+            setLoading(false);
+        }
+    };
+
     const loadUser = async () => {
         try {
             const response = await authService.getMe();
@@ -36,9 +81,8 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Error loading user:', error);
             if (error.response?.status === 401) {
-                localStorage.removeItem('token');
+                localStorage.removeItem('accessToken');
                 localStorage.removeItem('refreshToken');
-                localStorage.removeItem('user');
                 setUser(null);
                 setIsAuthenticated(false);
             }
@@ -47,18 +91,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // ✅ Login - Save tokens
+    // ✅ Login - Save both tokens (90 days)
     const login = async (email, password) => {
         setLoading(true);
         try {
             const response = await authService.login({ email, password });
-            const { token, refreshToken, user } = response;
+            const { accessToken, refreshToken, user } = response;
             
-            // ✅ Save tokens
-            localStorage.setItem('token', token);
-            if (refreshToken) {
-                localStorage.setItem('refreshToken', refreshToken);
-            }
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('user', JSON.stringify(user));
             
             setUser(user);
@@ -73,18 +114,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // ✅ Register - Save tokens
+    // ✅ Register - Save both tokens (90 days)
     const register = async (name, email, password) => {
         setLoading(true);
         try {
             const response = await authService.register({ name, email, password });
-            const { token, refreshToken, user } = response;
+            const { accessToken, refreshToken, user } = response;
             
-            // ✅ Save tokens
-            localStorage.setItem('token', token);
-            if (refreshToken) {
-                localStorage.setItem('refreshToken', refreshToken);
-            }
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
             localStorage.setItem('user', JSON.stringify(user));
             
             setUser(user);
@@ -101,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
     // ✅ Logout - Clear all tokens
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
         setUser(null);
@@ -109,55 +147,16 @@ export const AuthProvider = ({ children }) => {
         toast.info('Logged out successfully');
     };
 
-    // ✅ Update Profile
-    const updateProfile = async (profileData) => {
+    // ✅ Check token status
+    const checkTokenStatus = async () => {
         try {
-            const response = await authService.updateProfile(profileData);
-            setUser(prev => ({ ...prev, ...response.profile }));
-            toast.success('Profile updated successfully!');
-            return { success: true };
+            const token = localStorage.getItem('accessToken');
+            if (!token) return { valid: false, daysLeft: 0 };
+            
+            const response = await authService.checkToken(token);
+            return response;
         } catch (error) {
-            toast.error(error.message || 'Failed to update profile');
-            return { success: false };
-        }
-    };
-
-    // ✅ Update Settings
-    const updateSettings = async (settings) => {
-        try {
-            const response = await authService.updateSettings(settings);
-            setUser(prev => ({ ...prev, settings: response.settings }));
-            toast.success('Settings updated successfully!');
-            return { success: true };
-        } catch (error) {
-            toast.error(error.message || 'Failed to update settings');
-            return { success: false };
-        }
-    };
-
-    // ✅ Check if token is expired
-    const isTokenExpired = () => {
-        const token = localStorage.getItem('token');
-        if (!token) return true;
-        
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.exp * 1000 < Date.now();
-        } catch {
-            return true;
-        }
-    };
-
-    // ✅ Get token expiry time
-    const getTokenExpiry = () => {
-        const token = localStorage.getItem('token');
-        if (!token) return null;
-        
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return new Date(payload.exp * 1000);
-        } catch {
-            return null;
+            return { valid: false, daysLeft: 0 };
         }
     };
 
@@ -169,10 +168,31 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         loadUser,
-        updateProfile,
-        updateSettings,
+        refreshAccessToken,
         isTokenExpired,
-        getTokenExpiry,
+        checkTokenStatus,
+        updateProfile: async (data) => {
+            try {
+                const response = await authService.updateProfile(data);
+                setUser(prev => ({ ...prev, ...response.profile }));
+                toast.success('Profile updated successfully!');
+                return { success: true };
+            } catch (error) {
+                toast.error('Failed to update profile');
+                return { success: false };
+            }
+        },
+        updateSettings: async (settings) => {
+            try {
+                const response = await authService.updateSettings(settings);
+                setUser(prev => ({ ...prev, settings: response.settings }));
+                toast.success('Settings updated successfully!');
+                return { success: true };
+            } catch (error) {
+                toast.error('Failed to update settings');
+                return { success: false };
+            }
+        }
     };
 
     return (
