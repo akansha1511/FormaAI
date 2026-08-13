@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from config.ai_config import config
 from services.ai_service import (
-    extract_incident_data,  # ✅ This is the main function
+    extract_incident_data,  
     generate_form,
     analyze_incident,
     autofill_fields,
